@@ -86,9 +86,7 @@ public class NetUniApp extends JFrame {
         return panel;
     }
 
-    // ==========================================
-    // TELA 2: HOME - PEDIDOS E OFERTAS (RF06, RF07)
-    // ==========================================
+    // Pag Home RF04 A RF07
     private JPanel createHomeScreen() {
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(360, 640));
@@ -267,9 +265,8 @@ public class NetUniApp extends JFrame {
         repaint();
     }
 
-    // ==========================================
-    // TELA 3: CHAT E CONTRATAÇÃO (RF08, RF09, RF10, RF11)
-    // ==========================================
+//CHAT RF08 RF09 RF10 RF11
+
     private JPanel createChatScreen() {
         JPanel panel = new JPanel(new BorderLayout());
         
@@ -321,9 +318,7 @@ public class NetUniApp extends JFrame {
         return panel;
     }
 
-    // ==========================================
-    // TELA 4: PERFIL E PORTFÓLIO (RF03, RF12)
-    // ==========================================
+   // PERFIL RF03 RF12
     private JPanel createProfileScreen() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.WHITE);
@@ -347,7 +342,7 @@ public class NetUniApp extends JFrame {
         infoPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         infoPanel.setBackground(Color.WHITE);
         
-        infoPanel.add(new JLabel("<html><h2>Seu Nome</h2><p>Ciência da Computação - 5º Semestre</p></html>"));
+        infoPanel.add(new JLabel("<html><h2>Seu Nome </h2><p>Seu Curso - 2º Semestre</p></html>"));
         infoPanel.add(new JLabel("<html><b>Minhas Habilidades:</b> Java, UI Design, Redação</html>"));
         infoPanel.add(new JLabel(" "));
         infoPanel.add(new JLabel("<html><h3>Meu Portfólio (RF12)</h3></html>"));
