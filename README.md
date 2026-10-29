@@ -13,6 +13,7 @@ combinados no chat e só ficam registrados. O pagamento acontece fora do NetUni.
 
 - `backend/`: API em Java (Spring Boot + JPA + banco H2)
 - `mobile/`: app em Flutter (ainda em teste, ver `mobile/README.md`)
+- `web/`: versão web (uma página só, `web/index.html`) com apresentação da ideia e acesso à mesma API. O app mobile continua sendo o app principal
 - `docs/`: rotas da API, rastreabilidade do RF09, onde ficam if/else e for no código, e os testes
 - `prototipo-desktop:/`: primeiro protótipo visual feito em Java Swing (fica no final deste arquivo)
 
@@ -75,6 +76,12 @@ Se quiser usar PostgreSQL em vez do H2: `mvn spring-boot:run -Dspring-boot.run.p
 8. O contratante confirma a conclusão
 9. O contratante avalia
 10. O serviço aparece no portfólio do prestador
+
+## Versão web
+
+Abra `web/index.html` no navegador (ou rode `python3 -m http.server -d web 5500` e acesse `http://localhost:5500`).
+Ela usa a API publicada no Render. Para usar o backend local, abra `index.html?api=http://localhost:8080`.
+Login de teste: `ana@una.br` / `123456`.
 
 ## Publicar a API na internet (opcional)
 
