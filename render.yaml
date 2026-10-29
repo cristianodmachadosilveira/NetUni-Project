@@ -1,0 +1,12 @@
+# Deploy da API no Render (https://render.com) - plano gratuito.
+# No Render: New > Blueprint > escolha este repositorio.
+services:
+  - type: web
+    name: netuni-api
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: NETUNI_DADOS_DEMONSTRACAO
+        value: "true"

@@ -4,3 +4,11 @@ bin/
 .classpath/
 .project/
 *.class
+.DS_Store
+backend/target/
+backend/data/
+mobile/.dart_tool/
+mobile/build/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/pubspec.lock
