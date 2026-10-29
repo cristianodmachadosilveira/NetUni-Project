@@ -11,12 +11,11 @@ public class ComunidadeResponse {
     public String icone;
     public String cor;
     public AlunoResumo criador;
-    public int membros;
-    public long posts;
-    public boolean souMembro;
+    /** Quantos anuncios abertos usam esta comunidade como etiqueta. */
+    public long anuncios;
     public LocalDateTime dataCriacao;
 
-    public static ComunidadeResponse de(Comunidade c, long quantidadePosts, boolean souMembro) {
+    public static ComunidadeResponse de(Comunidade c, long anuncios) {
         ComunidadeResponse r = new ComunidadeResponse();
         r.id = c.getId();
         r.nome = c.getNome();
@@ -24,9 +23,7 @@ public class ComunidadeResponse {
         r.icone = c.getIcone();
         r.cor = c.getCor();
         r.criador = AlunoResumo.de(c.getCriador());
-        r.membros = c.getMembros().size();
-        r.posts = quantidadePosts;
-        r.souMembro = souMembro;
+        r.anuncios = anuncios;
         r.dataCriacao = c.getDataCriacao();
         return r;
     }

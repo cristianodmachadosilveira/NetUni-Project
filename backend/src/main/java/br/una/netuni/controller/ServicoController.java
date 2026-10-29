@@ -36,11 +36,12 @@ public class ServicoController {
         return servicoService.criar(alunoId, dados);
     }
 
-    /** RF06 - ex.: GET /servicos?tipo=OFERTA&busca=calculo */
+    /** RF06 / RF13 - ex.: GET /servicos?tipo=OFERTA&busca=calculo&comunidadeId=2 */
     @GetMapping
     public List<ServicoResponse> buscar(@RequestParam(required = false) TipoServico tipo,
-                                        @RequestParam(required = false) String busca) {
-        return servicoService.buscar(tipo, busca);
+                                        @RequestParam(required = false) String busca,
+                                        @RequestParam(required = false) Long comunidadeId) {
+        return servicoService.buscar(tipo, busca, comunidadeId);
     }
 
     @GetMapping("/{id}")

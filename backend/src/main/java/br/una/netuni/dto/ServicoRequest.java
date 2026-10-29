@@ -30,4 +30,7 @@ public class ServicoRequest {
     @Positive(message = "deve ser maior que zero")
     @Max(value = 365, message = "maximo 365 dias")
     public Integer prazoDias;
+
+    /** Opcional: id da comunidade usada como etiqueta do anuncio. */
+    public Long comunidadeId;
 }

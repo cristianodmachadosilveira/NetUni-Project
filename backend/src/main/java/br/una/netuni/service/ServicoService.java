@@ -19,10 +19,13 @@ public class ServicoService {
 
     private final ServicoRepository servicoRepository;
     private final UsuarioService usuarioService;
+    private final ComunidadeService comunidadeService;
 
-    public ServicoService(ServicoRepository servicoRepository, UsuarioService usuarioService) {
+    public ServicoService(ServicoRepository servicoRepository, UsuarioService usuarioService,
+                          ComunidadeService comunidadeService) {
         this.servicoRepository = servicoRepository;
         this.usuarioService = usuarioService;
+        this.comunidadeService = comunidadeService;
     }
 
     // RF04
@@ -63,11 +66,15 @@ public class ServicoService {
     }
 
     /**
-     * RF06 - Busca. Entradas opcionais: tipo (PEDIDO/OFERTA) e texto.
+     * RF06 - Busca. Entradas opcionais: tipo (PEDIDO/OFERTA), texto e comunidade (RF13).
      * Percorre os servicos abertos e mantem so os que passam nos filtros.
+     * Sem comunidade, todos aparecem (com ou sem etiqueta): e a lista geral de anuncios.
      */
     @Transactional(readOnly = true)
-    public List<ServicoResponse> buscar(TipoServico tipo, String texto) {
+    public List<ServicoResponse> buscar(TipoServico tipo, String texto, Long comunidadeId) {
+        if (comunidadeId != null) {
+            comunidadeService.buscarComunidade(comunidadeId);   // 404 se nao existir
+        }
         List<Servico> abertos = servicoRepository.findByStatusOrderByDataCriacaoDesc(StatusServico.ABERTO);
         String termo = "";
         if (texto != null) {
@@ -80,6 +87,9 @@ public class ServicoService {
                 continue;
             }
             if (!termo.isEmpty() && !contemTermo(servico, termo)) {
+                continue;
+            }
+            if (comunidadeId != null && !daComunidade(servico, comunidadeId)) {
                 continue;
             }
             resultado.add(ServicoResponse.de(servico));
@@ -113,6 +123,10 @@ public class ServicoService {
         return servico;
     }
 
+    private boolean daComunidade(Servico servico, Long comunidadeId) {
+        return servico.getComunidade() != null && servico.getComunidade().getId().equals(comunidadeId);
+    }
+
     /** Procura o termo no titulo e na descricao, sem diferenciar maiusculas. */
     private boolean contemTermo(Servico servico, String termo) {
         if (servico.getTitulo().toLowerCase().contains(termo)) {
@@ -131,5 +145,10 @@ public class ServicoService {
         }
         servico.setPreco(dados.preco);
         servico.setPrazoDias(dados.prazoDias);
+        if (dados.comunidadeId == null) {
+            servico.setComunidade(null);
+        } else {
+            servico.setComunidade(comunidadeService.buscarComunidade(dados.comunidadeId));
+        }
     }
 }

@@ -16,6 +16,8 @@ public class ServicoResponse {
     public Integer prazoDias;
     public StatusServico status;
     public AlunoResumo autor;
+    /** Etiqueta do anuncio (null se nao tiver). */
+    public ComunidadeResumo comunidade;
     public LocalDateTime dataCriacao;
 
     public static ServicoResponse de(Servico s) {
@@ -28,6 +30,7 @@ public class ServicoResponse {
         r.prazoDias = s.getPrazoDias();
         r.status = s.getStatus();
         r.autor = AlunoResumo.de(s.getAutor());
+        r.comunidade = ComunidadeResumo.de(s.getComunidade());
         r.dataCriacao = s.getDataCriacao();
         return r;
     }
