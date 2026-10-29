@@ -1,93 +1,93 @@
 # NetUni
 
-**Conectando habilidades, oportunidades e estudantes.**
+Conectando habilidades, oportunidades e estudantes.
 
-App mobile para estudantes da UNA oferecerem e contratarem serviços entre si: pedidos, ofertas,
-negociação, contratação, avaliação e portfólio. Projeto da A3 de Ciência da Computação (2026).
+Projeto da A3 de Ciência da Computação (UNA, 2026), para as matérias de Algoritmos e Programação e
+Projeto e Engenharia de Software. É um app para estudantes da UNA oferecerem e contratarem serviços
+entre si (aulas de reforço, design, planilhas, formatação de trabalho, etc.).
 
-> **Regra de pagamento:** o NetUni só registra o valor e a forma de pagamento combinados.
-> O pagamento acontece fora do app (Pix, dinheiro, link). Não há carteira, checkout nem comissão.
+Importante: o app **não processa pagamento**. O valor e a forma de pagamento (Pix, dinheiro...) são
+combinados no chat e só ficam registrados. O pagamento acontece fora do NetUni.
 
-## Estrutura
+## O que tem no repositório
 
-| Pasta | O que é |
-|---|---|
-| `backend/` | API REST em Java 17 + Spring Boot 3 + Spring Data JPA/Hibernate + H2 (ou PostgreSQL) |
-| `mobile/` | App Flutter com as 14 telas, consumindo a API ([como rodar](mobile/README.md)) |
-| `docs/` | [API](docs/API.md), [rastreabilidade do RF09](docs/rastreabilidade.md), [algoritmos](docs/algoritmos.md), [testes](docs/testes.md) |
-| `prototipo-desktop:/` | Protótipo visual antigo em Java Swing (veja abaixo) |
-
-Camadas do backend (`backend/src/main/java/br/una/netuni/`):
-`controller` → `service` (regras) → `repository` (JPA) → `model` (entidades), com `dto`, `exception` e `config`.
+- `backend/`: API em Java (Spring Boot + JPA + banco H2)
+- `mobile/`: app em Flutter (ainda em teste, ver `mobile/README.md`)
+- `docs/`: rotas da API, rastreabilidade do RF09, onde ficam if/else e for no código, e os testes
+- `prototipo-desktop:/`: primeiro protótipo visual feito em Java Swing (fica no final deste arquivo)
 
 ## Requisitos funcionais
 
-| RF | Requisito | Backend | Tela |
-|---|---|---|---|
-| RF01 | Cadastro de usuário | `UsuarioService.cadastrar` | Cadastro |
-| RF02 | Login | `UsuarioService.login` + `AutenticacaoInterceptor` | Login |
-| RF03 | Gerenciamento do perfil | `UsuarioService.atualizarPerfil` | Perfil |
-| RF04 | Publicação de serviços | `ServicoService.criar` | Criar serviço |
-| RF05 | Gerenciamento de serviços | `ServicoService.atualizar/encerrar` | Detalhes / Perfil |
-| RF06 | Busca de serviços | `ServicoService.buscar` | Home / Busca |
-| RF07 | Visualização do serviço | `ServicoService.visualizar` | Detalhes |
-| RF08 | Comunicação | `ContratacaoService.enviarMensagem` | Conversa |
-| RF09 | Solicitação de serviço | `ContratacaoService.solicitar` | Solicitação |
-| RF10 | Gerenciamento da contratação | `ContratacaoService.negociar/alterarStatus` | Contratação |
-| RF11 | Avaliação | `AvaliacaoService.avaliar` | Avaliação |
-| RF12 | Portfólio | `PortfolioService` | Portfólio |
+| RF | O que faz | Onde está no backend |
+|---|---|---|
+| RF01 | Cadastro | `UsuarioService.cadastrar` |
+| RF02 | Login | `UsuarioService.login` |
+| RF03 | Perfil e habilidades | `UsuarioService.atualizarPerfil` |
+| RF04 | Publicar serviço (pedido ou oferta) | `ServicoService.criar` |
+| RF05 | Editar e encerrar serviço | `ServicoService.atualizar` e `encerrar` |
+| RF06 | Buscar serviços | `ServicoService.buscar` |
+| RF07 | Ver detalhes do serviço | `ServicoService.visualizar` |
+| RF08 | Chat da contratação | `ContratacaoService.enviarMensagem` |
+| RF09 | Solicitar serviço | `ContratacaoService.solicitar` |
+| RF10 | Acompanhar a contratação | `ContratacaoService.negociar` e `alterarStatus` |
+| RF11 | Avaliar | `AvaliacaoService.avaliar` |
+| RF12 | Portfólio | `PortfolioService` |
 
 ## Como rodar o backend
 
-Pré-requisitos: JDK 17+ e Maven.
+Precisa de JDK 17 ou mais novo e Maven.
 
 ```bash
 cd backend
-mvn test              # roda os testes automatizados
+mvn test              # roda os testes
 mvn spring-boot:run   # sobe a API em http://localhost:8080
 ```
 
-O banco H2 fica em `backend/data/` e é criado sozinho. Na primeira execução são criados alunos de
-demonstração (senha `123456`): `ana@una.br`, `bruno@una.br`, `carla@una.br`.
-Console do banco: http://localhost:8080/h2-console (JDBC URL `jdbc:h2:file:./data/netuni`, usuário `sa`).
+O banco (H2) é criado sozinho na pasta `backend/data`. Na primeira vez entram alguns dados de
+exemplo. A senha de todos é `123456`:
 
-Teste rápido:
+- ana@una.br
+- bruno@una.br
+- carla@una.br
+
+Para testar o login:
 
 ```bash
 curl -X POST localhost:8080/login -H "Content-Type: application/json" \
      -d '{"email":"bruno@una.br","senha":"123456"}'
 ```
 
-Para usar PostgreSQL: `mvn spring-boot:run -Dspring-boot.run.profiles=postgres`
-(variáveis `DB_URL`, `DB_USER`, `DB_PASS`).
+As rotas estão em `docs/API.md`. Também dá para ver o banco em http://localhost:8080/h2-console (URL `jdbc:h2:file:./data/netuni`,
+usuário `sa`, senha em branco).
 
-## Publicar a API na internet (Render, gratuito)
-
-Assim o app funciona em qualquer celular, sem o computador ligado.
-
-1. Crie uma conta em https://render.com entrando com o GitHub.
-2. Clique em **New → Blueprint** e escolha o repositório `NetUni-Project`. O Render lê o arquivo
-   `render.yaml`, monta a imagem com o `backend/Dockerfile` (os testes rodam durante a montagem) e publica.
-3. Ao terminar, copie o endereço, algo como `https://netuni-api.onrender.com`.
-4. Rode o app apontando para ele:
-   `flutter run --dart-define=API_URL=https://netuni-api.onrender.com`
-   (com HTTPS não precisa liberar `usesCleartextTraffic`).
-
-Limites do plano gratuito: a API "dorme" após 15 minutos sem uso e a primeira chamada demora
-cerca de 1 minuto para acordar; o banco H2 é apagado quando o serviço reinicia (os dados de
-demonstração são recriados sozinhos). Para guardar dados de verdade, crie um PostgreSQL no Render e
-defina `SPRING_PROFILES_ACTIVE=postgres`, `DB_URL`, `DB_USER` e `DB_PASS` no serviço.
-Antes da apresentação, abra o endereço da API uma vez para "acordá-la".
+Se quiser usar PostgreSQL em vez do H2: `mvn spring-boot:run -Dspring-boot.run.profiles=postgres`
+(configure `DB_URL`, `DB_USER` e `DB_PASS`).
 
 ## Fluxo da demonstração
 
-1. Cadastro → 2. Login → 3. Perfil → 4. Habilidades → 5. Publicar serviço →
-6. Outro aluno busca → 7. Visualiza → 8. Solicita → 9. Conversam → 10. Registram valor e forma de pagamento →
-11. Prestador aceita e inicia → 12. Contratante confirma a conclusão → 13. Avalia → 14. Serviço aparece no portfólio.
+1. Cadastrar e fazer login
+2. Preencher o perfil e as habilidades
+3. Publicar um serviço
+4. Com outra conta, buscar e abrir o serviço
+5. Solicitar o serviço
+6. Conversar e combinar valor e forma de pagamento
+7. O prestador aceita e inicia
+8. O contratante confirma a conclusão
+9. O contratante avalia
+10. O serviço aparece no portfólio do prestador
 
-## Próximas etapas (backlog)
+## Publicar a API na internet (opcional)
 
-Notificações, autenticação JWT, chat em tempo real (WebSocket), upload de imagem de perfil.
+Tem um `Dockerfile` em `backend/` e um `render.yaml` na raiz para publicar no Render (plano gratuito):
+New, Blueprint, escolher este repositório. No plano gratuito a API dorme depois de um tempo sem uso
+(a primeira chamada demora ~1 minuto) e o banco H2 é apagado quando ela reinicia.
+
+## O que ainda falta
+
+- Testar o app Flutter no emulador de ponta a ponta
+- Notificações (o sino do app ainda não faz nada)
+- Login com JWT (hoje é um token simples guardado no banco)
+- Chat em tempo real (hoje precisa atualizar a tela)
 
 ---
 
