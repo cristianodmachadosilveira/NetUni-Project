@@ -61,6 +61,24 @@ curl -X POST localhost:8080/login -H "Content-Type: application/json" \
 Para usar PostgreSQL: `mvn spring-boot:run -Dspring-boot.run.profiles=postgres`
 (variáveis `DB_URL`, `DB_USER`, `DB_PASS`).
 
+## Publicar a API na internet (Render, gratuito)
+
+Assim o app funciona em qualquer celular, sem o computador ligado.
+
+1. Crie uma conta em https://render.com entrando com o GitHub.
+2. Clique em **New → Blueprint** e escolha o repositório `NetUni-Project`. O Render lê o arquivo
+   `render.yaml`, monta a imagem com o `backend/Dockerfile` (os testes rodam durante a montagem) e publica.
+3. Ao terminar, copie o endereço, algo como `https://netuni-api.onrender.com`.
+4. Rode o app apontando para ele:
+   `flutter run --dart-define=API_URL=https://netuni-api.onrender.com`
+   (com HTTPS não precisa liberar `usesCleartextTraffic`).
+
+Limites do plano gratuito: a API "dorme" após 15 minutos sem uso e a primeira chamada demora
+cerca de 1 minuto para acordar; o banco H2 é apagado quando o serviço reinicia (os dados de
+demonstração são recriados sozinhos). Para guardar dados de verdade, crie um PostgreSQL no Render e
+defina `SPRING_PROFILES_ACTIVE=postgres`, `DB_URL`, `DB_USER` e `DB_PASS` no serviço.
+Antes da apresentação, abra o endereço da API uma vez para "acordá-la".
+
 ## Fluxo da demonstração
 
 1. Cadastro → 2. Login → 3. Perfil → 4. Habilidades → 5. Publicar serviço →
