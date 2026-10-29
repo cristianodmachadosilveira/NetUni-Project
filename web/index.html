@@ -122,6 +122,8 @@
   .linha { display: flex; gap: 10px; flex-wrap: wrap; }
   .linha > * { flex: 1; min-width: 140px; }
   .erro { color: var(--erro); font-weight: 600; margin-top: 10px; min-height: 1.2em; }
+  .status-api { margin: 16px 0 0; font-size: .9rem; font-weight: 600; color: var(--cinza); min-height: 1.4em; }
+  .status-api.ok { color: var(--verde); } .status-api.acordando { color: #ffd166; } .status-api.fora { color: var(--erro); }
   .link { background: none; border: 0; color: var(--ciano); cursor: pointer; font-weight: 600; padding: 0; }
 
   /* app */
@@ -404,7 +406,8 @@
       <p class="erro" id="erroCadastro"></p>
       <button class="btn" style="width:100%">Criar conta</button>
     </form>
-    <p class="meta" style="margin-top:16px">API: <span id="apiAtual"></span> · <button class="link" id="trocarApi">trocar</button></p>
+    <p class="status-api" id="statusApi"></p>
+    <p class="meta" style="margin-top:6px">API: <span id="apiAtual"></span> · <button class="link" id="trocarApi">trocar</button></p>
   </div>
 </div>
 
@@ -454,11 +457,14 @@ async function chamar(metodo, caminho, corpo) {
   if (corpo !== undefined && !ehArquivo) cab['Content-Type'] = 'application/json';
   if (estado.token) cab['Authorization'] = 'Bearer ' + estado.token;
   let resp;
+  const controle = new AbortController();
+  const limite = setTimeout(() => controle.abort(), ehArquivo ? 180000 : 90000);
   try {
-    resp = await fetch(estado.api + caminho, { method: metodo, headers: cab, body: corpo === undefined ? undefined : (ehArquivo ? corpo : JSON.stringify(corpo)) });
+    resp = await fetch(estado.api + caminho, { method: metodo, headers: cab, signal: controle.signal, body: corpo === undefined ? undefined : (ehArquivo ? corpo : JSON.stringify(corpo)) });
   } catch (e) {
-    throw new Error('Não consegui falar com a API. Se ela está no Render gratuito, pode estar acordando: tente de novo em 1 minuto.');
-  }
+    throw new Error('Não consegui falar com o servidor (' + estado.api + '). Ele pode estar fora do ar ou ainda acordando. Espere 1 minuto e tente de novo.');
+  } finally { clearTimeout(limite); }
+  estado.apiOnline = true;
   const texto = await resp.text();
   let dados = null;
   try { dados = texto ? JSON.parse(texto) : null; } catch (e) { throw new Error('A API respondeu algo inesperado (HTTP ' + resp.status + ').'); }
@@ -534,7 +540,10 @@ function aviso(texto) {
 }
 
 // ================================================================ autenticacao
-function irParaAuth(aba) { trocarAuth(aba); mostrar('auth'); $('#apiAtual').textContent = estado.api; }
+function irParaAuth(aba) {
+  trocarAuth(aba); mostrar('auth'); $('#apiAtual').textContent = estado.api;
+  if (estado.apiOnline) mostrarStatus('ok', '● Servidor online');
+}
 function trocarAuth(aba) {
   const login = aba === 'login';
   $('#formLogin').classList.toggle('hidden', !login);
@@ -548,23 +557,23 @@ $('#btnSair').onclick = () => { sair(); };
 $('#preencherDemo').onclick = () => { const f = $('#formLogin'); f.email.value = 'ana@una.br'; f.senha.value = '123456'; };
 $('#trocarApi').onclick = () => {
   const novo = prompt('Endereço da API (ex.: http://localhost:8080):', estado.api);
-  if (novo) { estado.api = novo.trim().replace(/\/+$/, ''); guardar.gravar('netuni_api', estado.api); $('#apiAtual').textContent = estado.api; }
+  if (novo) { estado.api = novo.trim().replace(/\/+$/, ''); guardar.gravar('netuni_api', estado.api); $('#apiAtual').textContent = estado.api; estado.apiOnline = false; acordarApi(); }
 };
 
 $('#formLogin').onsubmit = async (e) => {
   e.preventDefault();
   $('#erroLogin').textContent = '';
   const f = e.target, btn = f.querySelector('button.btn');
-  btn.disabled = true;
+  const pararEspera = esperando(btn, 'Entrando...');
   try { entrar(await chamar('POST', '/login', { email: f.email.value.trim(), senha: f.senha.value })); }
   catch (err) { $('#erroLogin').textContent = err.message; }
-  btn.disabled = false;
+  pararEspera();
 };
 $('#formCadastro').onsubmit = async (e) => {
   e.preventDefault();
   $('#erroCadastro').textContent = '';
   const f = e.target, btn = f.querySelector('button.btn');
-  btn.disabled = true;
+  const pararEspera = esperando(btn, 'Criando conta...');
   try {
     await chamar('POST', '/usuarios', {
       nome: f.nome.value.trim(), email: f.email.value.trim(), senha: f.senha.value,
@@ -572,8 +581,35 @@ $('#formCadastro').onsubmit = async (e) => {
     });
     entrar(await chamar('POST', '/login', { email: f.email.value.trim(), senha: f.senha.value }));
   } catch (err) { $('#erroCadastro').textContent = err.message; }
-  btn.disabled = false;
+  pararEspera();
 };
+
+/** Botao "carregando": se demorar, explica que o servidor gratuito esta acordando. */
+function esperando(btn, texto) {
+  const original = btn.textContent;
+  btn.disabled = true; btn.textContent = texto;
+  const t1 = setTimeout(() => { if (!estado.apiOnline) mostrarStatus('acordando', 'O servidor gratuito está acordando. Isso leva até 1 minuto, não feche a página...'); }, 3000);
+  const t2 = setTimeout(() => { btn.textContent = 'Ainda conectando...'; }, 20000);
+  return () => { clearTimeout(t1); clearTimeout(t2); btn.disabled = false; btn.textContent = original; };
+}
+function mostrarStatus(tipo, texto) {
+  const el = $('#statusApi'); if (!el) return;
+  el.className = 'status-api ' + tipo; el.textContent = texto;
+}
+/** Assim que a pagina abre, "cutuca" o servidor para ele ir acordando. */
+async function acordarApi() {
+  mostrarStatus('acordando', 'Conectando ao servidor...');
+  const aviso = setTimeout(() => { if (!estado.apiOnline) mostrarStatus('acordando', 'O servidor gratuito está acordando. Isso leva até 1 minuto...'); }, 3000);
+  const controle = new AbortController();
+  const limite = setTimeout(() => controle.abort(), 90000);
+  try {
+    await fetch(estado.api + '/servicos', { signal: controle.signal });   // qualquer resposta (mesmo 401) = servidor de pe
+    estado.apiOnline = true;
+    mostrarStatus('ok', '● Servidor online');
+  } catch (e) {
+    mostrarStatus('fora', '● Não consegui falar com o servidor. Confira se a API está no ar no painel do Render.');
+  } finally { clearTimeout(aviso); clearTimeout(limite); }
+}
 
 function entrar(resp) {
   estado.token = resp.token; estado.usuario = resp.usuario;
@@ -1316,6 +1352,7 @@ async function montarPerfil(id, proprio) {
 
 // ================================================================ inicio
 (async function iniciar() {
+  acordarApi();
   if (estado.token) {
     try {
       const u = await chamar('GET', '/usuarios/me');
