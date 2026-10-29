@@ -4,100 +4,156 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NetUni - servicos entre alunos da UNA</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&family=Orbitron:wght@600;800&display=swap">
 <style>
+  /* Tema: planeta Netuno. Azul profundo do espaco, azul/ciano do planeta e o verde do anel do logo. */
   :root {
-    --verde: #1f8a5b; --verde-claro: #e3f4ec;
-    --azul: #2563b8;  --azul-claro: #e6eefa;
-    --texto: #16212b; --cinza: #5b6873; --borda: #dfe4e8; --fundo: #f5f7f6;
-    --erro: #b3261e;
+    --espaco: #040a24; --espaco2: #0a1640;
+    --painel: rgba(16, 34, 96, .55); --painel-forte: #0c1a4d;
+    --linha: rgba(130, 175, 255, .2);
+    --texto: #e8efff; --cinza: #9fb2d9;
+    --azul: #2f6bff; --ciano: #19b8ff; --anel: #2ee6a0;
+    --verde: #34e8a4; --verde-claro: rgba(46, 230, 160, .14);
+    --azul-claro: rgba(25, 184, 255, .14);
+    --erro: #ff8a8a;
   }
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--texto); background: var(--fundo); line-height: 1.45; }
-  h1, h2, h3 { margin: 0 0 .4em; line-height: 1.15; }
+  html { background: var(--espaco); }
+  body {
+    margin: 0; min-height: 100vh; color: var(--texto); line-height: 1.5;
+    font-family: "Exo 2", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  /* ceu estrelado fixo atras de tudo */
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(1px 1px at 12% 18%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 78% 12%, #cfe0ff 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 33% 72%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 62% 44%, #bcd4ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 88% 82%, #fff 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 6% 90%, #dfe9ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 47% 8%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 93% 38%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 24% 46%, #a9c6ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 70% 92%, #fff 50%, transparent 51%),
+      radial-gradient(60% 50% at 85% 0%, rgba(47, 107, 255, .28), transparent 70%),
+      radial-gradient(50% 45% at 0% 100%, rgba(46, 230, 160, .12), transparent 70%),
+      linear-gradient(180deg, var(--espaco) 0%, var(--espaco2) 100%);
+  }
+  h1, h2, h3 { margin: 0 0 .4em; line-height: 1.15; font-family: "Orbitron", "Exo 2", system-ui, sans-serif; letter-spacing: .3px; }
+  h3 { font-family: "Exo 2", system-ui, sans-serif; font-weight: 700; }
   button, input, select, textarea { font: inherit; }
-  .container { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+  a { color: var(--ciano); }
+  .container { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
   .hidden { display: none !important; }
 
   /* topo */
-  header.topo { background: #fff; border-bottom: 1px solid var(--borda); position: sticky; top: 0; z-index: 5; }
-  header.topo .container { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 12px; }
-  .logo { font-weight: 800; font-size: 1.3rem; letter-spacing: -.5px; }
-  .logo span { color: var(--verde); }
+  header.topo { background: rgba(4, 10, 36, .78); backdrop-filter: blur(10px); border-bottom: 1px solid var(--linha); position: sticky; top: 0; z-index: 5; }
+  header.topo .container { display: flex; align-items: center; justify-content: space-between; min-height: 64px; gap: 12px; flex-wrap: wrap; }
+  .logo { display: flex; align-items: center; gap: 10px; font-family: "Orbitron", sans-serif; font-weight: 800; font-size: 1.25rem; cursor: pointer; }
+  .logo img { width: 38px; height: 38px; filter: drop-shadow(0 0 10px rgba(25, 184, 255, .45)); }
+  .logo span { color: var(--anel); }
   nav { display: flex; gap: 6px; flex-wrap: wrap; }
-  nav button { background: none; border: 0; padding: 8px 12px; border-radius: 8px; cursor: pointer; color: var(--cinza); font-weight: 600; }
-  nav button.ativo { background: var(--verde-claro); color: var(--verde); }
+  nav button { background: none; border: 0; padding: 8px 12px; border-radius: 99px; cursor: pointer; color: var(--cinza); font-weight: 600; }
+  nav button:hover { color: var(--texto); }
+  nav button.ativo { background: var(--azul-claro); color: var(--ciano); box-shadow: inset 0 0 0 1px rgba(25, 184, 255, .35); }
 
-  .btn { border: 0; border-radius: 10px; padding: 10px 18px; font-weight: 700; cursor: pointer; background: var(--verde); color: #fff; }
-  .btn.azul { background: var(--azul); }
-  .btn.sec { background: #fff; color: var(--texto); border: 1px solid var(--borda); }
-  .btn.perigo { background: #fff; color: var(--erro); border: 1px solid var(--erro); }
-  .btn:disabled { opacity: .5; cursor: default; }
-  .btn.grande { padding: 14px 26px; font-size: 1.05rem; }
+  .btn { border: 0; border-radius: 99px; padding: 10px 20px; font-weight: 700; cursor: pointer; color: #04122e; background: linear-gradient(90deg, var(--anel), var(--ciano)); box-shadow: 0 0 18px rgba(46, 230, 160, .25); transition: transform .15s, box-shadow .15s; }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 0 26px rgba(25, 184, 255, .4); }
+  .btn.azul { background: linear-gradient(90deg, #1e4bd8, var(--azul)); color: #fff; box-shadow: 0 0 18px rgba(47, 107, 255, .35); }
+  .btn.sec { background: rgba(255, 255, 255, .04); color: var(--texto); border: 1px solid var(--linha); box-shadow: none; }
+  .btn.perigo { background: transparent; color: var(--erro); border: 1px solid var(--erro); box-shadow: none; }
+  .btn:disabled { opacity: .5; cursor: default; transform: none; }
+  .btn.grande { padding: 14px 28px; font-size: 1.05rem; }
 
   /* landing */
-  .hero { background: linear-gradient(135deg, #12202b, #1c3a33); color: #f4f5f0; padding: 72px 0 64px; }
-  .hero h1 { font-size: clamp(2.2rem, 6vw, 3.6rem); max-width: 14em; }
-  .hero p { font-size: 1.2rem; max-width: 36em; color: #c9d3da; }
+  .hero { padding: 72px 0 56px; overflow: hidden; }
+  .hero .container { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; }
+  .hero .eyebrow { color: var(--anel); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; font-size: .85rem; }
+  .hero h1 { font-size: clamp(2rem, 5vw, 3.3rem); }
+  .hero h1 em { font-style: normal; background: linear-gradient(90deg, var(--ciano), var(--anel)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p { font-size: 1.15rem; max-width: 34em; color: var(--cinza); }
   .hero .acoes { display: flex; gap: 12px; margin-top: 26px; flex-wrap: wrap; }
-  .secao { padding: 48px 0; }
+  .planeta { position: relative; aspect-ratio: 1; max-width: 400px; width: 100%; justify-self: center; display: grid; place-items: center; }
+  .planeta::before { content: ""; position: absolute; inset: 6%; border-radius: 50%; background: radial-gradient(circle, rgba(25, 184, 255, .35), transparent 65%); filter: blur(20px); }
+  .planeta .orbita { position: absolute; inset: 0; border-radius: 50%; border: 1px dashed rgba(130, 175, 255, .3); animation: girar 60s linear infinite; }
+  .planeta .orbita::after { content: ""; position: absolute; top: 50%; left: -6px; width: 12px; height: 12px; border-radius: 50%; background: var(--anel); box-shadow: 0 0 14px var(--anel); }
+  .planeta img { position: relative; width: 72%; border-radius: 22%; animation: flutuar 6s ease-in-out infinite; box-shadow: 0 20px 60px rgba(0, 0, 0, .5); }
+  @keyframes girar { to { transform: rotate(360deg); } }
+  @keyframes flutuar { 50% { transform: translateY(-10px); } }
+  @media (prefers-reduced-motion: reduce) { .planeta .orbita, .planeta img { animation: none; } }
+  @media (max-width: 760px) { .hero .container { grid-template-columns: 1fr; } .planeta { max-width: 260px; order: -1; } }
+
+  .secao { padding: 44px 0; }
   .grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-  .card { background: #fff; border: 1px solid var(--borda); border-radius: 14px; padding: 18px; }
-  .card.pedido { border-top: 5px solid var(--verde); }
-  .card.oferta { border-top: 5px solid var(--azul); }
+  .card { background: var(--painel); border: 1px solid var(--linha); border-radius: 18px; padding: 18px; backdrop-filter: blur(6px); }
+  .card p { color: var(--cinza); }
+  .card.pedido { border-top: 3px solid var(--verde); }
+  .card.oferta { border-top: 3px solid var(--ciano); }
   .passos { counter-reset: p; list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
-  .passos li { counter-increment: p; background: #fff; border: 1px solid var(--borda); border-radius: 12px; padding: 14px 16px 14px 56px; position: relative; }
-  .passos li::before { content: counter(p); position: absolute; left: 14px; top: 12px; width: 28px; height: 28px; border-radius: 50%; background: var(--verde); color: #fff; font-weight: 700; display: grid; place-items: center; }
-  .aviso { background: #fff8e6; border: 1px solid #f0d58a; border-radius: 12px; padding: 14px 16px; }
-  footer { padding: 32px 0 48px; color: var(--cinza); font-size: .9rem; }
+  .passos li { counter-increment: p; background: var(--painel); border: 1px solid var(--linha); border-radius: 14px; padding: 14px 16px 14px 60px; position: relative; color: var(--cinza); }
+  .passos li b { color: var(--texto); }
+  .passos li::before { content: counter(p); position: absolute; left: 14px; top: 12px; width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, var(--azul), var(--ciano)); color: #fff; font-weight: 800; display: grid; place-items: center; box-shadow: 0 0 12px rgba(25, 184, 255, .5); }
+  .aviso { background: rgba(46, 230, 160, .08); border: 1px solid rgba(46, 230, 160, .35); border-radius: 14px; padding: 14px 16px; color: var(--texto); }
+  footer { padding: 32px 0 48px; color: var(--cinza); font-size: .9rem; border-top: 1px solid var(--linha); }
 
   /* formularios */
-  .caixa { background: #fff; border: 1px solid var(--borda); border-radius: 16px; padding: 24px; max-width: 460px; margin: 32px auto; }
-  label { display: block; font-weight: 600; font-size: .9rem; margin: 12px 0 4px; }
-  input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--borda); border-radius: 10px; background: #fff; }
+  .caixa { background: var(--painel); border: 1px solid var(--linha); border-radius: 20px; padding: 26px; max-width: 460px; margin: 40px auto; backdrop-filter: blur(8px); box-shadow: 0 20px 60px rgba(0, 0, 0, .35); }
+  .caixa .marca { display: flex; justify-content: center; margin-bottom: 14px; }
+  .caixa .marca img { width: 72px; height: 72px; filter: drop-shadow(0 0 16px rgba(25, 184, 255, .5)); }
+  label { display: block; font-weight: 600; font-size: .9rem; margin: 12px 0 4px; color: var(--cinza); }
+  input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--linha); border-radius: 12px; background: rgba(4, 10, 36, .7); color: var(--texto); }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--ciano); box-shadow: 0 0 0 3px rgba(25, 184, 255, .2); }
+  select option { background: var(--painel-forte); }
   textarea { min-height: 80px; resize: vertical; }
   .linha { display: flex; gap: 10px; flex-wrap: wrap; }
   .linha > * { flex: 1; min-width: 140px; }
   .erro { color: var(--erro); font-weight: 600; margin-top: 10px; min-height: 1.2em; }
   .ok { color: var(--verde); font-weight: 600; }
-  .link { background: none; border: 0; color: var(--azul); cursor: pointer; font-weight: 600; padding: 0; }
+  .link { background: none; border: 0; color: var(--ciano); cursor: pointer; font-weight: 600; padding: 0; }
 
   /* app */
-  main.app { padding: 22px 0 60px; }
+  main.app { padding: 24px 0 60px; }
   .barra { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
   .barra input { flex: 2; min-width: 180px; }
-  .abas { display: flex; background: #fff; border: 1px solid var(--borda); border-radius: 10px; overflow: hidden; }
-  .abas button { border: 0; background: none; padding: 9px 14px; font-weight: 700; cursor: pointer; color: var(--cinza); }
-  .abas button.ativo { background: var(--texto); color: #fff; }
-  .abas button.ativo.p { background: var(--verde); }
-  .abas button.ativo.o { background: var(--azul); }
+  .abas { display: flex; background: rgba(4, 10, 36, .7); border: 1px solid var(--linha); border-radius: 99px; overflow: hidden; padding: 3px; }
+  .abas button { border: 0; background: none; padding: 8px 14px; font-weight: 700; cursor: pointer; color: var(--cinza); border-radius: 99px; }
+  .abas button.ativo { background: linear-gradient(90deg, #1e4bd8, var(--azul)); color: #fff; }
+  .abas button.ativo.p { background: var(--verde); color: #04122e; }
+  .abas button.ativo.o { background: var(--ciano); color: #04122e; }
   .lista { display: grid; gap: 12px; }
-  .item { cursor: pointer; }
-  .item:hover { box-shadow: 0 2px 10px rgba(0,0,0,.08); }
-  .selo { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: .78rem; font-weight: 800; letter-spacing: .5px; }
+  .item { cursor: pointer; transition: border-color .15s, box-shadow .15s, transform .15s; }
+  .item:hover { border-color: rgba(25, 184, 255, .5); box-shadow: 0 0 24px rgba(25, 184, 255, .15); transform: translateY(-1px); }
+  .selo { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: .75rem; font-weight: 800; letter-spacing: .8px; }
   .selo.PEDIDO { background: var(--verde-claro); color: var(--verde); }
-  .selo.OFERTA { background: var(--azul-claro); color: var(--azul); }
-  .selo.st { background: #eef0f2; color: var(--texto); }
+  .selo.OFERTA { background: var(--azul-claro); color: var(--ciano); }
+  .selo.st { background: rgba(255, 255, 255, .08); color: var(--texto); }
   .meta { color: var(--cinza); font-size: .92rem; }
-  .preco { font-weight: 800; }
+  .preco { font-weight: 800; color: var(--texto); }
   .vazio { text-align: center; color: var(--cinza); padding: 36px 0; }
 
   /* janela */
-  .fundo { position: fixed; inset: 0; background: rgba(10,20,28,.55); z-index: 20; display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 28px 12px; }
-  .janela { background: #fff; border-radius: 16px; width: 100%; max-width: 640px; padding: 24px; position: relative; }
+  .fundo { position: fixed; inset: 0; background: rgba(2, 6, 22, .75); backdrop-filter: blur(4px); z-index: 20; display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 28px 12px; }
+  .janela { background: linear-gradient(180deg, #0f1f5a, var(--painel-forte)); border: 1px solid var(--linha); border-radius: 20px; width: 100%; max-width: 640px; padding: 24px; position: relative; box-shadow: 0 30px 80px rgba(0, 0, 0, .5); }
+  .janela p { color: var(--cinza); }
+  .janela p b { color: var(--texto); }
   .fechar { position: absolute; right: 14px; top: 10px; font-size: 1.6rem; background: none; border: 0; cursor: pointer; color: var(--cinza); }
   .acoes-contr { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
-  .chat { border: 1px solid var(--borda); border-radius: 12px; padding: 10px; max-height: 260px; overflow-y: auto; background: var(--fundo); display: grid; gap: 6px; }
-  .msg { max-width: 82%; padding: 7px 11px; border-radius: 12px; background: #fff; border: 1px solid var(--borda); }
-  .msg.eu { justify-self: end; background: var(--verde-claro); border-color: #bfe3d1; }
-  .msg b { font-size: .78rem; color: var(--cinza); display: block; }
-  .estrelas button { background: none; border: 0; font-size: 1.8rem; cursor: pointer; color: #c9a227; padding: 0 2px; }
+  .chat { border: 1px solid var(--linha); border-radius: 14px; padding: 10px; max-height: 260px; overflow-y: auto; background: rgba(4, 10, 36, .6); display: grid; gap: 6px; }
+  .msg { max-width: 82%; padding: 7px 11px; border-radius: 14px; background: rgba(255, 255, 255, .06); border: 1px solid var(--linha); color: var(--texto); }
+  .msg.eu { justify-self: end; background: rgba(46, 230, 160, .14); border-color: rgba(46, 230, 160, .4); }
+  .msg b { font-size: .75rem; color: var(--cinza); display: block; }
+  .estrelas button { background: none; border: 0; font-size: 1.8rem; cursor: pointer; color: #ffd166; padding: 0 2px; }
 </style>
 </head>
 <body>
 
 <header class="topo">
   <div class="container">
-    <div class="logo">Net<span>Uni</span></div>
+    <div class="logo" id="logoTopo"><img src="logo.png" alt="Logo do NetUni"><b>Net<span>Uni</span></b></div>
     <nav id="menu" class="hidden">
       <button data-v="explorar">Explorar</button>
       <button data-v="contratacoes">Contratações</button>
@@ -114,11 +170,18 @@
 <div id="landing">
   <section class="hero">
     <div class="container">
-      <h1>Seu colega pode ser quem resolve o que você precisa.</h1>
-      <p>O NetUni conecta alunos da UNA: quem sabe fazer oferece o serviço, quem precisa publica o pedido. Combinem, façam e avaliem. O pagamento é combinado entre vocês, fora do app.</p>
-      <div class="acoes">
-        <button class="btn grande" onclick="irParaAuth('cadastro')">Criar conta</button>
-        <button class="btn grande sec" onclick="irParaAuth('login')">Já tenho conta</button>
+      <div>
+        <p class="eyebrow">Alunos da UNA em órbita</p>
+        <h1>Seu colega pode ser <em>quem resolve</em> o que você precisa.</h1>
+        <p>O NetUni conecta alunos da UNA: quem sabe fazer oferece o serviço, quem precisa publica o pedido. Combinem, façam e avaliem. O pagamento é combinado entre vocês, fora do app.</p>
+        <div class="acoes">
+          <button class="btn grande" onclick="irParaAuth('cadastro')">Criar conta</button>
+          <button class="btn grande sec" onclick="irParaAuth('login')">Já tenho conta</button>
+        </div>
+      </div>
+      <div class="planeta" aria-hidden="true">
+        <div class="orbita"></div>
+        <img src="logo.png" alt="">
       </div>
     </div>
   </section>
@@ -158,6 +221,7 @@
 <!-- AUTENTICACAO -->
 <div id="auth" class="hidden">
   <div class="caixa">
+    <div class="marca"><img src="logo.png" alt="Logo do NetUni"></div>
     <div class="abas" style="margin-bottom:6px">
       <button id="tabLogin" class="ativo" onclick="trocarAuth('login')">Entrar</button>
       <button id="tabCadastro" onclick="trocarAuth('cadastro')">Criar conta</button>
@@ -253,6 +317,7 @@ function trocarAuth(aba) {
   $('#tabLogin').classList.toggle('ativo', login);
   $('#tabCadastro').classList.toggle('ativo', !login);
 }
+$('#logoTopo').onclick = () => { if (estado.token) ir('explorar'); else mostrar('landing'); };
 $('#btnEntrar').onclick = () => irParaAuth('login');
 $('#btnSair').onclick = () => { sair(); };
 $('#preencherDemo').onclick = () => { const f = $('#formLogin'); f.email.value = 'ana@una.br'; f.senha.value = '123456'; };
