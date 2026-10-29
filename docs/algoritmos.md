@@ -18,6 +18,11 @@ Caminho base: `backend/src/main/java/br/una/netuni/`
 | **for** | `service/UsuarioService.java` → `montarHabilidades`, laço na linha 124 | Percorre as habilidades digitadas, ignora vazias/repetidas |
 | **for (acumulador)** | `service/AvaliacaoService.java` linha 70 + `calcularMedia` (linha 80) | Soma as notas e calcula a média |
 | **for com índice** | `service/SenhaService.java` linha 63 | Compara o hash da senha byte a byte |
+| **for + if (ranking)** | `service/PostService.java` → `feed`, laço na linha 123, e `calcularPontuacao` (linha 148) | Percorre os posts, dá uma nota para cada um (curtidas, comentários, comunidade, idade) |
+| **Ordenação** | `service/PostService.java` linha 134 (`itens.sort`) | Coloca o feed "Para você" da maior para a menor pontuação |
+| **for (busca em lista)** | `service/ComunidadeService.java` → `ehMembro` (linha 102) | Percorre os membros para saber se o aluno participa |
+| **while** | `service/ComunidadeService.java` linha 89 | Percorre os membros com um `Iterator` e remove quem saiu |
+| **if/else (alternar)** | `service/PostService.java` linha 188 | Se já curtiu, descurte; senão, curte |
 | **Vetores** | `byte[] sal`, `String[] partes` em `SenhaService`; `String[] habilidades` em `config/DadosDemonstracao` | |
 | **Listas** | `List<ServicoResponse>`, `List<Mensagem>`, `List<Avaliacao>`, `Set<Habilidade>` | Resultados de busca, chat, avaliações |
 | **Métodos** | `cadastrar`, `login`, `criar`, `buscar`, `solicitar`, `alterarStatus`, `avaliar`, `calcularMedia` | Cada regra em um método com nome claro |

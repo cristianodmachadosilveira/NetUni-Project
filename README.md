@@ -33,6 +33,9 @@ combinados no chat e só ficam registrados. O pagamento acontece fora do NetUni.
 | RF10 | Acompanhar a contratação | `ContratacaoService.negociar` e `alterarStatus` |
 | RF11 | Avaliar | `AvaliacaoService.avaliar` |
 | RF12 | Portfólio | `PortfolioService` |
+| RF13 | Comunidades (criar, entrar, sair) | `ComunidadeService` |
+| RF14 | Postar foto, vídeo curto ou texto | `PostService.publicar` e `MidiaService.salvar` |
+| RF15 | Feed vertical ranqueado, curtir e comentar | `PostService.feed`, `alternarCurtida` e `comentar` |
 
 ## Como rodar o backend
 
@@ -82,6 +85,10 @@ Se quiser usar PostgreSQL em vez do H2: `mvn spring-boot:run -Dspring-boot.run.p
 Abra `web/index.html` no navegador (é um arquivo só, o logo já vem dentro dele) (ou rode `python3 -m http.server -d web 5500` e acesse `http://localhost:5500`).
 Ela usa a API publicada no Render. Para usar o backend local, abra `index.html?api=http://localhost:8080`.
 Login de teste: `ana@una.br` / `123456`.
+
+Telas da versão web: **Feed** (vídeos curtos, fotos e textos em tela cheia, rolando de um em um; toque para pausar,
+dois toques para curtir), **Comunidades**, **Serviços**, **Chat** (as conversas das contratações, atualizando a cada
+4 segundos) e **Perfil** (grade de posts). Feed e comunidades precisam do backend novo publicado.
 
 ## Publicar a API na internet (opcional)
 

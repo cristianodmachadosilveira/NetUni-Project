@@ -13,6 +13,10 @@ spring:
     hibernate:
       ddl-auto: update        # Hibernate cria/atualiza as tabelas a partir das entidades
     open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 30MB     # fotos e videos curtos do feed
+      max-request-size: 32MB
   h2:
     console:
       enabled: true           # http://localhost:8080/h2-console  (JDBC URL acima, usuario sa)
@@ -20,6 +24,7 @@ spring:
 netuni:
   dados-demonstracao: true    # cria 3 alunos e 4 servicos se o banco estiver vazio (senha 123456)
   validade-token-dias: 7
+  pasta-midias: ./data/midias # onde ficam os uploads do feed
 
 ---
 # PostgreSQL:  mvn spring-boot:run -Dspring-boot.run.profiles=postgres

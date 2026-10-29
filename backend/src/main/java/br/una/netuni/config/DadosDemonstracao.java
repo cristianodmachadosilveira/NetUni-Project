@@ -11,6 +11,7 @@ import br.una.netuni.service.SenhaService;
 import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
  * Logins (senha 123456): ana@una.br, bruno@una.br, carla@una.br
  */
 @Component
+@Order(1)
 public class DadosDemonstracao implements CommandLineRunner {
 
     private final AlunoRepository alunoRepository;

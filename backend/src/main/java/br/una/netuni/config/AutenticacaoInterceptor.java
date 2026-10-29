@@ -38,6 +38,11 @@ public class AutenticacaoInterceptor implements HandlerInterceptor {
         if (metodo.equals("POST") && (caminho.equals("/usuarios") || caminho.equals("/login"))) {
             return true;
         }
+        // Fotos e videos do feed: a tag <video>/<img> do navegador nao manda o token.
+        if ((metodo.equals("GET") || metodo.equals("HEAD"))
+                && (caminho.startsWith("/midias/") || caminho.startsWith("/demo/"))) {
+            return true;
+        }
 
         String cabecalho = request.getHeader("Authorization");
         if (cabecalho == null || !cabecalho.startsWith("Bearer ")) {

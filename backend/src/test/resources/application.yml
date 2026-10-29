@@ -11,3 +11,4 @@ spring:
 netuni:
   dados-demonstracao: false
   validade-token-dias: 7
+  pasta-midias: target/midias-teste
