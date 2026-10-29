@@ -2,19 +2,19 @@ package br.una.netuni.service;
 
 import br.una.netuni.dto.ComentarioRequest;
 import br.una.netuni.dto.ComentarioResponse;
-import br.una.netuni.dto.CurtidaResponse;
 import br.una.netuni.dto.PostRequest;
 import br.una.netuni.dto.PostResponse;
+import br.una.netuni.dto.SalvoResponse;
 import br.una.netuni.exception.RegraDeNegocioException;
 import br.una.netuni.model.Aluno;
 import br.una.netuni.model.Comentario;
 import br.una.netuni.model.Comunidade;
-import br.una.netuni.model.Curtida;
 import br.una.netuni.model.Post;
+import br.una.netuni.model.Salvamento;
 import br.una.netuni.model.TipoMidia;
 import br.una.netuni.repository.ComentarioRepository;
-import br.una.netuni.repository.CurtidaRepository;
 import br.una.netuni.repository.PostRepository;
+import br.una.netuni.repository.SalvamentoRepository;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,12 +25,12 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** RF14 / RF15 - Feed no estilo de video curto: publicar, ranquear, curtir e comentar. */
+/** RF14 / RF15 - Feed "Para voce" no estilo de video curto: publicar, ranquear, salvar e comentar. Sem curtidas. */
 @Service
 public class PostService {
 
     // Pesos do algoritmo do feed "Para voce".
-    public static final int PESO_CURTIDA = 2;
+    public static final int PESO_SALVO = 2;
     public static final int PESO_COMENTARIO = 3;
     public static final int BONUS_MINHA_COMUNIDADE = 10;
     public static final double HORAS_PARA_PERDER_METADE = 12.0;
@@ -39,16 +39,16 @@ public class PostService {
     public static final int LIMITE_MAXIMO = 50;
 
     private final PostRepository postRepository;
-    private final CurtidaRepository curtidaRepository;
+    private final SalvamentoRepository salvamentoRepository;
     private final ComentarioRepository comentarioRepository;
     private final ComunidadeService comunidadeService;
     private final UsuarioService usuarioService;
 
-    public PostService(PostRepository postRepository, CurtidaRepository curtidaRepository,
+    public PostService(PostRepository postRepository, SalvamentoRepository salvamentoRepository,
                        ComentarioRepository comentarioRepository, ComunidadeService comunidadeService,
                        UsuarioService usuarioService) {
         this.postRepository = postRepository;
-        this.curtidaRepository = curtidaRepository;
+        this.salvamentoRepository = salvamentoRepository;
         this.comentarioRepository = comentarioRepository;
         this.comunidadeService = comunidadeService;
         this.usuarioService = usuarioService;
@@ -125,7 +125,7 @@ public class PostService {
             boolean daMinhaComunidade = post.getComunidade() != null
                     && minhasComunidades.contains(post.getComunidade().getId());
             long horas = Duration.between(post.getData(), agora).toHours();
-            r.pontuacao = calcularPontuacao(r.curtidas, r.comentarios, daMinhaComunidade, horas);
+            r.pontuacao = calcularPontuacao(r.salvos, r.comentarios, daMinhaComunidade, horas);
             itens.add(r);
         }
 
@@ -142,12 +142,12 @@ public class PostService {
     }
 
     /**
-     * Algoritmo do feed: engajamento + bonus de comunidade, dividido pelo "envelhecimento".
+     * Algoritmo do feed: engajamento (salvos e comentarios) + bonus de comunidade, dividido pelo "envelhecimento".
      * Um post com 12 horas vale metade de um igual recem-publicado.
      */
-    public static double calcularPontuacao(long curtidas, long comentarios, boolean daMinhaComunidade,
+    public static double calcularPontuacao(long salvos, long comentarios, boolean daMinhaComunidade,
                                            long horasDesdePost) {
-        double pontos = 1 + curtidas * PESO_CURTIDA + comentarios * PESO_COMENTARIO;
+        double pontos = 1 + salvos * PESO_SALVO + comentarios * PESO_COMENTARIO;
         if (daMinhaComunidade) {
             pontos = pontos + BONUS_MINHA_COMUNIDADE;
         }
@@ -174,29 +174,39 @@ public class PostService {
         if (!post.getAutor().getId().equals(alunoLogadoId)) {
             throw RegraDeNegocioException.semPermissao("Voce so pode apagar os seus posts");
         }
-        curtidaRepository.deleteByPostId(postId);
+        salvamentoRepository.deleteByPostId(postId);
         comentarioRepository.deleteByPostId(postId);
         postRepository.delete(post);
     }
 
-    // =============== Curtir / descurtir ===============
+    // =============== Salvar / tirar dos salvos ===============
     @Transactional
-    public CurtidaResponse alternarCurtida(Long postId, Long alunoLogadoId) {
+    public SalvoResponse alternarSalvo(Long postId, Long alunoLogadoId) {
         Post post = buscarPost(postId);
-        Optional<Curtida> existente = curtidaRepository.findByPostIdAndAlunoId(postId, alunoLogadoId);
-        boolean curtiu;
+        Optional<Salvamento> existente = salvamentoRepository.findByPostIdAndAlunoId(postId, alunoLogadoId);
+        boolean salvou;
         if (existente.isPresent()) {
-            curtidaRepository.delete(existente.get());
-            curtiu = false;
+            salvamentoRepository.delete(existente.get());
+            salvou = false;
         } else {
-            Curtida curtida = new Curtida();
-            curtida.setPost(post);
-            curtida.setAluno(usuarioService.buscarAluno(alunoLogadoId));
-            curtidaRepository.save(curtida);
-            curtiu = true;
+            Salvamento salvamento = new Salvamento();
+            salvamento.setPost(post);
+            salvamento.setAluno(usuarioService.buscarAluno(alunoLogadoId));
+            salvamentoRepository.save(salvamento);
+            salvou = true;
         }
-        curtidaRepository.flush();
-        return new CurtidaResponse(curtiu, curtidaRepository.countByPostId(postId));
+        salvamentoRepository.flush();
+        return new SalvoResponse(salvou, salvamentoRepository.countByPostId(postId));
+    }
+
+    /** Aba "Salvos" do perfil: so o proprio aluno ve. */
+    @Transactional(readOnly = true)
+    public List<PostResponse> salvosDoAluno(Long alunoLogadoId) {
+        List<PostResponse> lista = new ArrayList<>();
+        for (Salvamento s : salvamentoRepository.findByAlunoIdOrderByDataDescIdDesc(alunoLogadoId)) {
+            lista.add(montarResposta(s.getPost(), alunoLogadoId));
+        }
+        return lista;
     }
 
     // =============== Comentarios ===============
@@ -230,10 +240,10 @@ public class PostService {
     }
 
     private PostResponse montarResposta(Post post, Long alunoLogadoId) {
-        long curtidas = curtidaRepository.countByPostId(post.getId());
+        long salvos = salvamentoRepository.countByPostId(post.getId());
         long comentarios = comentarioRepository.countByPostId(post.getId());
-        boolean curtiu = curtidaRepository.findByPostIdAndAlunoId(post.getId(), alunoLogadoId).isPresent();
-        return PostResponse.de(post, curtidas, comentarios, curtiu, alunoLogadoId);
+        boolean salvou = salvamentoRepository.findByPostIdAndAlunoId(post.getId(), alunoLogadoId).isPresent();
+        return PostResponse.de(post, salvos, comentarios, salvou, alunoLogadoId);
     }
 
     /** Aceita arquivos enviados ao NetUni (/midias/...), os de demonstracao (/demo/...) ou links https. */

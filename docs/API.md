@@ -40,7 +40,8 @@ Base: `http://localhost:8080`. Todas as rotas, menos cadastro e login, exigem o 
 | DELETE | `/posts/{id}` | Apaga post (só o autor) | RF14 |
 | GET | `/feed` | Feed "Para você", ranqueado pelo algoritmo | RF15 |
 | GET | `/feed?comunidadeId=2` | Feed de uma comunidade, do mais novo ao mais antigo | RF15 |
-| POST | `/posts/{id}/curtida` | Curtir / descurtir (alterna) | RF15 |
+| POST | `/posts/{id}/salvo` | Salvar / tirar dos salvos (alterna). Não existem curtidas | RF15 |
+| GET | `/usuarios/me/salvos` | Posts que eu salvei (aba Salvos do perfil) | RF15 |
 | GET | `/posts/{id}/comentarios` | Lista comentários | RF15 |
 | POST | `/posts/{id}/comentarios` | Comenta | RF15 |
 | GET | `/usuarios/{id}/posts` | Posts de um aluno (grade do perfil) | RF15 |
@@ -63,7 +64,7 @@ checkout, transferência nem comissão.
 Para cada um dos 100 posts mais recentes:
 
 ```
-pontos = 1 + curtidas x 2 + comentarios x 3 (+ 10 se o post e de uma comunidade minha)
+pontos = 1 + salvos x 2 + comentarios x 3 (+ 10 se o post e de uma comunidade minha)
 pontuacao = pontos / (1 + horas desde o post / 12)
 ```
 

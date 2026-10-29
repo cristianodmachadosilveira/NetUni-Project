@@ -35,7 +35,7 @@ combinados no chat e só ficam registrados. O pagamento acontece fora do NetUni.
 | RF12 | Portfólio | `PortfolioService` |
 | RF13 | Comunidades (criar, entrar, sair) | `ComunidadeService` |
 | RF14 | Postar foto, vídeo curto ou texto | `PostService.publicar` e `MidiaService.salvar` |
-| RF15 | Feed vertical ranqueado, curtir e comentar | `PostService.feed`, `alternarCurtida` e `comentar` |
+| RF15 | Feed "Para você" ranqueado, salvar e comentar (sem curtidas) | `PostService.feed`, `alternarSalvo` e `comentar` |
 
 ## Como rodar o backend
 
@@ -87,8 +87,8 @@ Ela usa a API publicada no Render. Para usar o backend local, abra `index.html?a
 Login de teste: `ana@una.br` / `123456`.
 
 Telas da versão web: **Feed** (vídeos curtos, fotos e textos em tela cheia, rolando de um em um; toque para pausar,
-dois toques para curtir), **Comunidades**, **Serviços**, **Chat** (as conversas das contratações, atualizando a cada
-4 segundos) e **Perfil** (grade de posts). Feed e comunidades precisam do backend novo publicado.
+sem curtidas: dá para comentar e salvar), **Comunidades**, **Serviços**, **Chat** (as conversas das contratações, atualizando a cada
+4 segundos) e **Perfil** (grade de posts e aba Salvos). Feed e comunidades precisam do backend novo publicado.
 
 ## Publicar a API na internet (opcional)
 

@@ -176,11 +176,9 @@
   .acao .bola svg { width: 24px; height: 24px; }
   .acao:hover .bola { background: rgba(255, 255, 255, .18); }
   .acao:active .bola { transform: scale(.9); }
-  .acao.curtido .bola { color: var(--rosa); background: rgba(255, 77, 125, .15); border-color: rgba(255, 77, 125, .5); }
-  .acao.curtido .bola svg { animation: pulsar .35s ease; }
+  .acao.salvo .bola { color: #ffd166; background: rgba(255, 209, 102, .15); border-color: rgba(255, 209, 102, .5); }
+  .acao.salvo .bola svg { animation: pulsar .35s ease; }
   @keyframes pulsar { 40% { transform: scale(1.35); } }
-  .coracao-pop { position: absolute; width: 110px; height: 110px; color: var(--rosa); pointer-events: none; z-index: 4; transform: translate(-50%, -50%); animation: coracao .8s ease forwards; filter: drop-shadow(0 6px 18px rgba(255, 77, 125, .6)); }
-  @keyframes coracao { 0% { opacity: 0; transform: translate(-50%, -50%) scale(.3) rotate(-15deg); } 25% { opacity: 1; transform: translate(-50%, -50%) scale(1.15) rotate(-8deg); } 70% { opacity: 1; transform: translate(-50%, -80%) scale(1) rotate(0); } 100% { opacity: 0; transform: translate(-50%, -140%) scale(.8); } }
   .feed-topo { position: absolute; top: 12px; left: 0; right: 0; display: flex; justify-content: center; z-index: 5; pointer-events: none; padding: 0 12px; }
   .chips { pointer-events: auto; display: flex; gap: 8px; overflow-x: auto; max-width: min(100%, 620px); padding: 4px; scrollbar-width: none; }
   .chips::-webkit-scrollbar { display: none; }
@@ -505,7 +503,7 @@ function corDoNome(nome) {
 const avatar = (nome, extra = '') => `<span class="avatar-letra" style="background:${corDoNome(nome)}" ${extra}>${esc((nome || '?').trim().charAt(0).toUpperCase())}</span>`;
 
 const ICONE = {
-  coracao: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.4 8.4 2.3 4.5 6 4.1c2.1-.2 4 .9 6 3 2-2.1 3.9-3.2 6-3 3.7.4 5.6 4.3 4 7.6C19.5 16.4 12 21 12 21z"/></svg>',
+  salvar: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 2.5h12a1.5 1.5 0 0 1 1.5 1.5v17.5L12 16.8l-7.5 4.7V4A1.5 1.5 0 0 1 6 2.5z"/></svg>',
   balao: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.5 3 2 6.7 2 11.3c0 2.6 1.4 4.9 3.7 6.4L5 21.5l4.2-2.3c.9.2 1.8.3 2.8.3 5.5 0 10-3.7 10-8.2S17.5 3 12 3z"/></svg>',
   enviar: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 4.5V9C6.5 9.5 3 13.5 2 20c2.5-3.7 6-5.3 11-5.3v4.8l9-7.5-9-7.5z"/></svg>',
   lixo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
@@ -734,8 +732,8 @@ function slideHTML(p) {
     </div>
     <div class="acoes-post">
       ${avatar(p.autor.nome, `data-autor="${p.autor.id}" title="Ver perfil"`)}
-      <button class="acao ${p.curtiu ? 'curtido' : ''}" data-acao="curtir" aria-label="Curtir"><span class="bola">${ICONE.coracao}</span><span class="n">${compacto(p.curtidas)}</span></button>
       <button class="acao" data-acao="comentar" aria-label="Comentários"><span class="bola">${ICONE.balao}</span><span class="n">${compacto(p.comentarios)}</span></button>
+      <button class="acao ${p.salvou ? 'salvo' : ''}" data-acao="salvar" aria-label="Salvar"><span class="bola">${ICONE.salvar}</span><span class="n">${compacto(p.salvos)}</span></button>
       <button class="acao" data-acao="compartilhar" aria-label="Copiar link"><span class="bola">${ICONE.enviar}</span><span>Enviar</span></button>
       ${p.tipoMidia === 'VIDEO' ? `<button class="acao" data-acao="som" aria-label="Som"><span class="bola">${estado.som ? ICONE.somOn : ICONE.somOff}</span><span>Som</span></button>` : ''}
       ${p.meu ? `<button class="acao" data-acao="apagar" aria-label="Apagar post"><span class="bola">${ICONE.lixo}</span><span>Apagar</span></button>` : ''}
@@ -743,7 +741,7 @@ function slideHTML(p) {
   </section>`;
 }
 
-/** Desenha os slides num container rolavel e liga curtir, comentar, video que toca ao aparecer, etc. */
+/** Desenha os slides num container rolavel e liga comentar, salvar, video que toca ao aparecer, etc. */
 function montarFeed(container, posts, comFim) {
   if (!posts.length) {
     container.innerHTML = `<section class="slide fim-feed"><span class="img-logo"></span><h3>Nada por aqui ainda</h3><p>Seja a primeira pessoa a postar${estado.feedComunidade ? ' nesta comunidade' : ''}!</p><button class="btn" onclick="formNovoPost()">Criar post</button></section>`;
@@ -780,8 +778,7 @@ function montarFeed(container, posts, comFim) {
   if (container.id === 'feed') estado.observador = obs;
   else container._observador = obs;
 
-  // um toque pausa o video, dois toques curtem (como nos apps de video curto)
-  let ultimoToque = 0, esperaPausa = null;
+  // um toque no video pausa ou continua
   container.onclick = async (e) => {
     const slide = e.target.closest('.slide[data-id]');
     if (!slide) return;
@@ -795,47 +792,29 @@ function montarFeed(container, posts, comFim) {
     if (botao) { acaoDoPost(botao.dataset.acao, post, slide, container); return; }
     const palco = e.target.closest('.palco');
     if (!palco || e.target.closest('.legenda-area')) return;
-    const agora = Date.now();
-    if (agora - ultimoToque < 300) {
-      clearTimeout(esperaPausa);
-      coracaoNaTela(palco, e);
-      if (!post.curtiu) acaoDoPost('curtir', post, slide, container);
-      ultimoToque = 0;
-      return;
-    }
-    ultimoToque = agora;
     const v = palco.querySelector('video');
-    if (v) esperaPausa = setTimeout(() => {
-      if (v.paused) { v.play().catch(() => {}); palco.classList.remove('pausado'); }
-      else { v.pause(); palco.classList.add('pausado'); }
-    }, 260);
+    if (!v) return;
+    if (v.paused) { v.play().catch(() => {}); palco.classList.remove('pausado'); }
+    else { v.pause(); palco.classList.add('pausado'); }
   };
   const alvo = location.hash.match(/^#post-(\d+)$/);
   if (alvo && container.id === 'feed') { const s = document.getElementById('post-' + alvo[1]); if (s) s.scrollIntoView(); }
 }
 
-function coracaoNaTela(palco, e) {
-  const r = palco.getBoundingClientRect();
-  const c = document.createElement('span');
-  c.className = 'coracao-pop'; c.innerHTML = ICONE.coracao;
-  c.style.left = (e.clientX - r.left) + 'px'; c.style.top = (e.clientY - r.top) + 'px';
-  palco.appendChild(c);
-  setTimeout(() => c.remove(), 850);
-}
-
 async function acaoDoPost(acao, post, slide, container) {
-  if (acao === 'curtir') {
-    const botao = slide.querySelector('[data-acao="curtir"]');
+  if (acao === 'salvar') {
+    const botao = slide.querySelector('[data-acao="salvar"]');
     // atualiza na hora e confirma com a API
-    post.curtiu = !post.curtiu; post.curtidas += post.curtiu ? 1 : -1;
-    botao.classList.toggle('curtido', post.curtiu); botao.querySelector('.n').textContent = compacto(post.curtidas);
+    post.salvou = !post.salvou; post.salvos += post.salvou ? 1 : -1;
+    botao.classList.toggle('salvo', post.salvou); botao.querySelector('.n').textContent = compacto(post.salvos);
     try {
-      const r = await chamar('POST', '/posts/' + post.id + '/curtida');
-      post.curtiu = r.curtiu; post.curtidas = r.curtidas;
+      const r = await chamar('POST', '/posts/' + post.id + '/salvo');
+      post.salvou = r.salvou; post.salvos = r.salvos;
+      aviso(post.salvou ? 'Salvo! Veja na aba Salvos do seu perfil' : 'Removido dos salvos');
     } catch (err) {
-      post.curtiu = !post.curtiu; post.curtidas += post.curtiu ? 1 : -1; aviso(err.message);
+      post.salvou = !post.salvou; post.salvos += post.salvou ? 1 : -1; aviso(semRecursoNovo(err));
     }
-    botao.classList.toggle('curtido', post.curtiu); botao.querySelector('.n').textContent = compacto(post.curtidas);
+    botao.classList.toggle('salvo', post.salvou); botao.querySelector('.n').textContent = compacto(post.salvos);
   } else if (acao === 'comentar') {
     abrirComentarios(post, slide);
   } else if (acao === 'compartilhar') {
@@ -1299,7 +1278,7 @@ function telaPerfil() { $('#conteudo').innerHTML = carregando(); montarPerfil(es
 function verPerfilDe(id) { abrirModal(carregando()); montarPerfil(id, false); }
 
 function miniPost(p) {
-  const n = `<span class="n">${ICONE.coracao}${compacto(p.curtidas)}</span>`;
+  const n = `<span class="n">${ICONE.balao}${compacto(p.comentarios)}</span>`;
   if (p.tipoMidia === 'TEXTO') return `<div class="mini texto" data-post="${p.id}" style="background:linear-gradient(160deg, ${esc((p.comunidade && p.comunidade.cor) || '#2f6bff')}, #040a24)">${esc((p.legenda || '').slice(0, 90))}${n}</div>`;
   if (p.tipoMidia === 'IMAGEM') return `<div class="mini" data-post="${p.id}"><img src="${esc(urlMidia(p.midiaUrl))}" alt="" loading="lazy">${n}</div>`;
   const capa = capaDemo(p.midiaUrl);
@@ -1312,26 +1291,27 @@ function abrirPostSozinho(post) {
 
 async function montarPerfil(id, proprio) {
   try {
-    const [u, av, port, servicos, posts] = await Promise.all([
+    const [u, av, port, servicos, posts, salvos] = await Promise.all([
       chamar('GET', proprio ? '/usuarios/me' : '/usuarios/' + id),
       chamar('GET', '/usuarios/' + id + '/avaliacoes'),
       chamar('GET', '/usuarios/' + id + '/portfolio'),
       chamar('GET', '/usuarios/' + id + '/servicos'),
-      chamar('GET', '/usuarios/' + id + '/posts').catch(() => [])
+      chamar('GET', '/usuarios/' + id + '/posts').catch(() => []),
+      proprio ? chamar('GET', '/usuarios/me/salvos').catch(() => []) : Promise.resolve([])
     ]);
-    const curtidasTotais = posts.reduce((s, p) => s + p.curtidas, 0);
+    const salvosRecebidos = posts.reduce((s, p) => s + p.salvos, 0);
     const html = `
       <div class="cabeca-perfil">${avatar(u.nome)}<div><h2 style="margin:0">${esc(u.nome)}</h2>
         <p class="meta" style="margin:0">${esc(u.curso || 'UNA')}${u.semestre ? ' · ' + u.semestre + 'º semestre' : ''}${proprio && u.email ? ' · ' + esc(u.email) : ''}</p></div></div>
       ${u.descricao ? `<p>${esc(u.descricao)}</p>` : ''}
       <div class="numeros">
         <div><b>${posts.length}</b><span>posts</span></div>
-        <div><b>${compacto(curtidasTotais)}</b><span>curtidas</span></div>
+        <div><b>${compacto(salvosRecebidos)}</b><span>vezes salvo</span></div>
         <div><b>${av.total ? '★ ' + av.media.toFixed(1) : '-'}</b><span>${av.total} avaliações</span></div>
       </div>
       ${proprio ? `<div class="linha" style="margin-bottom:14px;flex-wrap:wrap"><button class="btn peq" onclick="formNovoPost()">+ Novo post</button><button class="btn sec peq" onclick="ir('contratacoes')">Minhas contratações</button></div>` : ''}
-      <h3>Posts</h3>
-      ${posts.length ? `<div class="grade-posts" id="gradePosts">${posts.map(miniPost).join('')}</div>` : '<p class="meta">Nenhum post ainda.</p>'}
+      ${proprio ? `<div class="abas" id="abasPerfil" style="display:inline-flex;margin-bottom:12px"><button data-aba="posts" class="ativo">Posts</button><button data-aba="salvos">Salvos (${salvos.length})</button></div>` : '<h3>Posts</h3>'}
+      <div id="gradeArea"></div>
       <h3 style="margin-top:18px">Serviços publicados</h3>
       ${servicos.length ? servicos.map(s => `<p style="margin:4px 0"><span class="selo ${s.tipo}">${s.tipo}</span> ${esc(s.titulo)} · ${dinheiro(s.preco)}</p>`).join('') : '<p class="meta">Nenhum.</p>'}
       <h3 style="margin-top:16px">Portfólio</h3>
@@ -1340,10 +1320,22 @@ async function montarPerfil(id, proprio) {
       ${av.avaliacoes.length ? av.avaliacoes.map(a => `<p style="margin:6px 0">${'★'.repeat(a.nota)}${'☆'.repeat(5 - a.nota)} <b>${esc(a.servicoTitulo)}</b><br><span class="meta">${esc(a.avaliadorNome)}${a.comentario ? ': ' + esc(a.comentario) : ''}</span></p>`).join('') : '<p class="meta">Nenhuma.</p>'}`;
     if (proprio) $('#conteudo').innerHTML = '<div class="card">' + html + '</div>';
     else abrirModal(html);
-    const grade = $('#gradePosts');
-    if (grade) grade.onclick = (e) => {
-      const m = e.target.closest('[data-post]'); if (!m) return;
-      abrirPostSozinho(posts.find(p => String(p.id) === m.dataset.post));
+    // grade de posts (e aba Salvos no proprio perfil)
+    const desenharGrade = (lista, vazio) => {
+      $('#gradeArea').innerHTML = lista.length ? `<div class="grade-posts" id="gradePosts">${lista.map(miniPost).join('')}</div>` : `<p class="meta">${vazio}</p>`;
+      const grade = $('#gradePosts');
+      if (grade) grade.onclick = (e) => {
+        const m = e.target.closest('[data-post]'); if (!m) return;
+        abrirPostSozinho(lista.find(p => String(p.id) === m.dataset.post));
+      };
+    };
+    desenharGrade(posts, 'Nenhum post ainda.');
+    const abas = $('#abasPerfil');
+    if (abas) abas.onclick = (e) => {
+      const b = e.target.closest('[data-aba]'); if (!b) return;
+      abas.querySelectorAll('button').forEach(x => x.classList.toggle('ativo', x === b));
+      if (b.dataset.aba === 'salvos') desenharGrade(salvos, 'Você ainda não salvou nenhum post. Toque no marcador no feed para salvar.');
+      else desenharGrade(posts, 'Nenhum post ainda.');
     };
   } catch (err) {
     if (proprio) $('#conteudo').innerHTML = falha(err); else abrirModal(falha(err));
