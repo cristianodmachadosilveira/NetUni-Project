@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: netuni
+  # Banco relacional H2 gravado em arquivo (pasta ./data). Nao precisa instalar nada.
+  datasource:
+    url: jdbc:h2:file:./data/netuni;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update        # Hibernate cria/atualiza as tabelas a partir das entidades
+    open-in-view: false
+  h2:
+    console:
+      enabled: true           # http://localhost:8080/h2-console  (JDBC URL acima, usuario sa)
+
+netuni:
+  dados-demonstracao: true    # cria 3 alunos e 4 servicos se o banco estiver vazio (senha 123456)
+  validade-token-dias: 7
+
+---
+# PostgreSQL:  mvn spring-boot:run -Dspring-boot.run.profiles=postgres
+spring:
+  config:
+    activate:
+      on-profile: postgres
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/netuni}
+    username: ${DB_USER:netuni}
+    password: ${DB_PASS:netuni}

@@ -1,4 +1,80 @@
-# 📱 NetUni - Protótipo Mobile
+# NetUni
+
+**Conectando habilidades, oportunidades e estudantes.**
+
+App mobile para estudantes da UNA oferecerem e contratarem serviços entre si: pedidos, ofertas,
+negociação, contratação, avaliação e portfólio. Projeto da A3 de Ciência da Computação (2026).
+
+> **Regra de pagamento:** o NetUni só registra o valor e a forma de pagamento combinados.
+> O pagamento acontece fora do app (Pix, dinheiro, link). Não há carteira, checkout nem comissão.
+
+## Estrutura
+
+| Pasta | O que é |
+|---|---|
+| `backend/` | API REST em Java 17 + Spring Boot 3 + Spring Data JPA/Hibernate + H2 (ou PostgreSQL) |
+| `mobile/` | App Flutter com as 14 telas, consumindo a API ([como rodar](mobile/README.md)) |
+| `docs/` | [API](docs/API.md), [rastreabilidade do RF09](docs/rastreabilidade.md), [algoritmos](docs/algoritmos.md), [testes](docs/testes.md) |
+| `prototipo-desktop:/` | Protótipo visual antigo em Java Swing (veja abaixo) |
+
+Camadas do backend (`backend/src/main/java/br/una/netuni/`):
+`controller` → `service` (regras) → `repository` (JPA) → `model` (entidades), com `dto`, `exception` e `config`.
+
+## Requisitos funcionais
+
+| RF | Requisito | Backend | Tela |
+|---|---|---|---|
+| RF01 | Cadastro de usuário | `UsuarioService.cadastrar` | Cadastro |
+| RF02 | Login | `UsuarioService.login` + `AutenticacaoInterceptor` | Login |
+| RF03 | Gerenciamento do perfil | `UsuarioService.atualizarPerfil` | Perfil |
+| RF04 | Publicação de serviços | `ServicoService.criar` | Criar serviço |
+| RF05 | Gerenciamento de serviços | `ServicoService.atualizar/encerrar` | Detalhes / Perfil |
+| RF06 | Busca de serviços | `ServicoService.buscar` | Home / Busca |
+| RF07 | Visualização do serviço | `ServicoService.visualizar` | Detalhes |
+| RF08 | Comunicação | `ContratacaoService.enviarMensagem` | Conversa |
+| RF09 | Solicitação de serviço | `ContratacaoService.solicitar` | Solicitação |
+| RF10 | Gerenciamento da contratação | `ContratacaoService.negociar/alterarStatus` | Contratação |
+| RF11 | Avaliação | `AvaliacaoService.avaliar` | Avaliação |
+| RF12 | Portfólio | `PortfolioService` | Portfólio |
+
+## Como rodar o backend
+
+Pré-requisitos: JDK 17+ e Maven.
+
+```bash
+cd backend
+mvn test              # roda os testes automatizados
+mvn spring-boot:run   # sobe a API em http://localhost:8080
+```
+
+O banco H2 fica em `backend/data/` e é criado sozinho. Na primeira execução são criados alunos de
+demonstração (senha `123456`): `ana@una.br`, `bruno@una.br`, `carla@una.br`.
+Console do banco: http://localhost:8080/h2-console (JDBC URL `jdbc:h2:file:./data/netuni`, usuário `sa`).
+
+Teste rápido:
+
+```bash
+curl -X POST localhost:8080/login -H "Content-Type: application/json" \
+     -d '{"email":"bruno@una.br","senha":"123456"}'
+```
+
+Para usar PostgreSQL: `mvn spring-boot:run -Dspring-boot.run.profiles=postgres`
+(variáveis `DB_URL`, `DB_USER`, `DB_PASS`).
+
+## Fluxo da demonstração
+
+1. Cadastro → 2. Login → 3. Perfil → 4. Habilidades → 5. Publicar serviço →
+6. Outro aluno busca → 7. Visualiza → 8. Solicita → 9. Conversam → 10. Registram valor e forma de pagamento →
+11. Prestador aceita e inicia → 12. Contratante confirma a conclusão → 13. Avalia → 14. Serviço aparece no portfólio.
+
+## Próximas etapas (backlog)
+
+Notificações, autenticação JWT, chat em tempo real (WebSocket), upload de imagem de perfil.
+
+---
+
+# Protótipo desktop (Java Swing)
+
 
 O **NetUni** é um protótipo de aplicativo mobile desenvolvido inteiramente em **Java Swing**. O objetivo da aplicação é conectar alunos universitários (como a comunidade da UNA, simulada no código), facilitando a oferta, solicitação e negociação de serviços acadêmicos e gerais (ex: formatação ABNT, aulas particulares, design).
 
