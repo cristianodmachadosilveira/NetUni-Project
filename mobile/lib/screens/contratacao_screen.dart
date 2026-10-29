@@ -17,7 +17,9 @@ class ContratacaoScreen extends StatefulWidget {
 class _ContratacaoScreenState extends State<ContratacaoScreen> {
   int _versao = 0;
 
-  void _recarregar() => setState(() => _versao++);
+  void _recarregar() {
+    if (mounted) setState(() => _versao++);
+  }
 
   Future<void> _executar(Future<dynamic> Function() acao) async {
     try {

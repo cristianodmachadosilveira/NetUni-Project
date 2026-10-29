@@ -86,8 +86,16 @@ class Api {
       throw ErroApi(0, 'Sem conexao com o servidor ($urlApi).');
     }
     final texto = utf8.decode(resposta.bodyBytes);
-    final dados = texto.isEmpty ? null : jsonDecode(texto);
+    dynamic dados;
+    try {
+      dados = texto.isEmpty ? null : jsonDecode(texto);
+    } on FormatException {
+      dados = null;
+    }
     if (resposta.statusCode >= 200 && resposta.statusCode < 300) {
+      if (dados == null && texto.isNotEmpty) {
+        throw ErroApi(resposta.statusCode, 'Resposta invalida do servidor');
+      }
       return dados;
     }
     String mensagem = 'Erro ${resposta.statusCode}';

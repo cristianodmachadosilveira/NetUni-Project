@@ -57,6 +57,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
         'descricao': descricao.text.trim(),
         'linkProjeto': link.text.trim(),
       });
+      if (!mounted) return;
       setState(() => _versao++);
     } on ErroApi catch (e) {
       if (mounted) avisar(context, e.mensagem);
@@ -66,6 +67,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
   Future<void> _remover(int id) async {
     try {
       await Api.i.delete('/portfolio/$id');
+      if (!mounted) return;
       setState(() => _versao++);
     } on ErroApi catch (e) {
       if (mounted) avisar(context, e.mensagem);

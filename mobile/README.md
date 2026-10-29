@@ -38,7 +38,8 @@ flutter run
 
 **Importante (Android):** a API roda em `http://` sem HTTPS. Depois do `flutter create`, abra
 `android/app/src/main/AndroidManifest.xml` e adicione `android:usesCleartextTraffic="true"`
-na tag `<application ...>`.
+na tag `<application ...>`. Para gerar APK de release, adicione também
+`<uses-permission android:name="android.permission.INTERNET"/>` no mesmo arquivo (antes de `<application>`).
 
 O app procura a API em `http://10.0.2.2:8080` (o seu computador visto pelo emulador Android).
 Em um celular físico, use o IP do computador na mesma rede Wi-Fi:

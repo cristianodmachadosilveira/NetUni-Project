@@ -46,6 +46,7 @@ class _ContratacoesScreenState extends State<ContratacoesScreen> {
                     onTap: () async {
                       await Navigator.push(context, MaterialPageRoute(
                           builder: (_) => ContratacaoScreen(id: (c['id'] as num).toInt())));
+                      if (!mounted) return;
                       setState(() => _versao++);
                     },
                   ),

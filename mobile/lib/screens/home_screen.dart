@@ -30,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _abrir(Widget tela) async {
     await Navigator.push(context, MaterialPageRoute(builder: (_) => tela));
+    if (!mounted) return;
     _recarregar();
   }
 
@@ -126,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(width: 12),
         GestureDetector(
           onTap: () => _abrir(PerfilScreen(alunoId: Api.i.meuId)),
-          child: Avatar(alunoId: 3, tamanho: 50),
+          child: Avatar(alunoId: Api.i.meuId, tamanho: 50),
         ),
       ]),
     );

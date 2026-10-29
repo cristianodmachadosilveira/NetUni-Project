@@ -74,6 +74,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
         'descricao': descricao.text.trim(),
         'habilidades': lista,
       }) as Json;
+      if (!mounted) return;
       setState(() => _versao++);
     } on ErroApi catch (e) {
       if (mounted) avisar(context, e.mensagem);
@@ -143,6 +144,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                 onTap: () async {
                   await Navigator.push(context,
                       MaterialPageRoute(builder: (_) => ServicoDetalheScreen(id: (s['id'] as num).toInt())));
+                  if (!mounted) return;
                   setState(() => _versao++);
                 },
               ),

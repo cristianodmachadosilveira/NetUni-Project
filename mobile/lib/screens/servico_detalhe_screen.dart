@@ -20,11 +20,9 @@ class _ServicoDetalheScreenState extends State<ServicoDetalheScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Cores.fundo,
-      child: SafeArea(
-        top: false,
-        child: Carregador<Json>(
+    return Scaffold(
+      appBar: AppBar(title: const Text('Servico'), backgroundColor: Cores.azul),
+      body: Carregador<Json>(
       key: ValueKey(_versao),
       carregar: () async => await Api.i.get('/servicos/${widget.id}') as Json,
       construir: (context, s, _) {
@@ -35,9 +33,8 @@ class _ServicoDetalheScreenState extends State<ServicoDetalheScreen> {
         final aberto = s['status'] == 'ABERTO';
         return Theme(
           data: temaNetUni(Cores.doTipo(s['tipo'] as String)),
-          child: Scaffold(
-            appBar: AppBar(title: Text(pedido ? 'Pedido' : 'Oferta')),
-            body: ListView(padding: const EdgeInsets.all(20), children: [
+          child: Builder(
+            builder: (context) => ListView(padding: const EdgeInsets.all(20), children: [
               Text(s['titulo'] as String, style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: 12),
               Text((s['descricao'] as String?) ?? 'Sem descricao.'),
@@ -67,6 +64,7 @@ class _ServicoDetalheScreenState extends State<ServicoDetalheScreen> {
                   onPressed: () async {
                     await Navigator.push(context, MaterialPageRoute(
                         builder: (_) => CriarServicoScreen(tipoInicial: s['tipo'] as String, existente: s)));
+                    if (!mounted) return;
                     setState(() => _versao++);
                   },
                 ),
@@ -95,7 +93,6 @@ class _ServicoDetalheScreenState extends State<ServicoDetalheScreen> {
           ),
         );
       },
-        ),
       ),
     );
   }
