@@ -14,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
-/** RF14 / RF15 - Posts, feed, curtidas, comentarios e upload de midia. */
+/** RF14 / RF15 - Posts, feed, salvos, comentarios e upload de midia. */
 class PostApiTest extends ApiTesteBase {
 
     private String tokenAna;
@@ -83,14 +83,28 @@ class PostApiTest extends ApiTesteBase {
     }
 
     @Test
-    void curtidaAlterna() throws Exception {
-        long post = publicarTexto(tokenAna, "curte ai");
-        postar("/posts/" + post + "/curtida", tokenBruno, "{}")
-                .andExpect(jsonPath("$.curtiu").value(true))
-                .andExpect(jsonPath("$.curtidas").value(1));
-        postar("/posts/" + post + "/curtida", tokenBruno, "{}")
-                .andExpect(jsonPath("$.curtiu").value(false))
-                .andExpect(jsonPath("$.curtidas").value(0));
+    void salvarAlternaEApareceNosSalvos() throws Exception {
+        long post = publicarTexto(tokenAna, "salva ai");
+        postar("/posts/" + post + "/salvo", tokenBruno, "{}")
+                .andExpect(jsonPath("$.salvou").value(true))
+                .andExpect(jsonPath("$.salvos").value(1));
+        mvc.perform(get("/usuarios/me/salvos").header("Authorization", "Bearer " + tokenBruno))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].legenda").value("salva ai"))
+                .andExpect(jsonPath("$[0].salvou").value(true));
+
+        postar("/posts/" + post + "/salvo", tokenBruno, "{}")
+                .andExpect(jsonPath("$.salvou").value(false))
+                .andExpect(jsonPath("$.salvos").value(0));
+        mvc.perform(get("/usuarios/me/salvos").header("Authorization", "Bearer " + tokenBruno))
+                .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    void feedNaoTemCurtidas() throws Exception {
+        publicarTexto(tokenAna, "sem likes");
+        JsonNode item = feed(tokenBruno, "").get(0);
+        assertTrue(item.get("curtidas") == null && item.get("salvos") != null);
     }
 
     @Test
@@ -109,7 +123,7 @@ class PostApiTest extends ApiTesteBase {
     @Test
     void soAutorApaga() throws Exception {
         long post = publicarTexto(tokenAna, "vou apagar");
-        postar("/posts/" + post + "/curtida", tokenBruno, "{}");
+        postar("/posts/" + post + "/salvo", tokenBruno, "{}");
         mvc.perform(delete("/posts/" + post).header("Authorization", "Bearer " + tokenBruno))
                 .andExpect(status().isForbidden());
         mvc.perform(delete("/posts/" + post).header("Authorization", "Bearer " + tokenAna))
@@ -121,7 +135,7 @@ class PostApiTest extends ApiTesteBase {
     void feedRanqueiaPorEngajamento() throws Exception {
         long antigo = publicarTexto(tokenAna, "primeiro");
         publicarTexto(tokenAna, "segundo");
-        postar("/posts/" + antigo + "/curtida", tokenBruno, "{}");
+        postar("/posts/" + antigo + "/salvo", tokenBruno, "{}");
 
         JsonNode itens = feed(tokenBruno, "");
         assertEquals("primeiro", itens.get(0).get("legenda").asText());

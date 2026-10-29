@@ -2,9 +2,9 @@ package br.una.netuni.controller;
 
 import br.una.netuni.dto.ComentarioRequest;
 import br.una.netuni.dto.ComentarioResponse;
-import br.una.netuni.dto.CurtidaResponse;
 import br.una.netuni.dto.PostRequest;
 import br.una.netuni.dto.PostResponse;
+import br.una.netuni.dto.SalvoResponse;
 import br.una.netuni.service.PostService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-/** RF14 / RF15 - Feed, posts, curtidas e comentarios. */
+/** RF14 / RF15 - Feed, posts, salvos e comentarios. */
 @RestController
 public class PostController {
 
@@ -49,10 +49,16 @@ public class PostController {
         postService.remover(id, alunoId);
     }
 
-    /** Curtir ou descurtir (alterna). */
-    @PostMapping("/posts/{id}/curtida")
-    public CurtidaResponse curtir(@PathVariable Long id, @RequestAttribute("alunoId") Long alunoId) {
-        return postService.alternarCurtida(id, alunoId);
+    /** Salvar ou tirar dos salvos (alterna). */
+    @PostMapping("/posts/{id}/salvo")
+    public SalvoResponse salvar(@PathVariable Long id, @RequestAttribute("alunoId") Long alunoId) {
+        return postService.alternarSalvo(id, alunoId);
+    }
+
+    /** Aba "Salvos" do perfil do aluno logado. */
+    @GetMapping("/usuarios/me/salvos")
+    public List<PostResponse> meusSalvos(@RequestAttribute("alunoId") Long alunoId) {
+        return postService.salvosDoAluno(alunoId);
     }
 
     @GetMapping("/posts/{id}/comentarios")

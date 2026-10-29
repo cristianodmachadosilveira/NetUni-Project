@@ -3,14 +3,14 @@ package br.una.netuni.config;
 import br.una.netuni.model.Aluno;
 import br.una.netuni.model.Comentario;
 import br.una.netuni.model.Comunidade;
-import br.una.netuni.model.Curtida;
 import br.una.netuni.model.Post;
+import br.una.netuni.model.Salvamento;
 import br.una.netuni.model.TipoMidia;
 import br.una.netuni.repository.AlunoRepository;
 import br.una.netuni.repository.ComentarioRepository;
 import br.una.netuni.repository.ComunidadeRepository;
-import br.una.netuni.repository.CurtidaRepository;
 import br.una.netuni.repository.PostRepository;
+import br.una.netuni.repository.SalvamentoRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,18 +29,18 @@ public class DadosComunidades implements CommandLineRunner {
     private final AlunoRepository alunoRepository;
     private final ComunidadeRepository comunidadeRepository;
     private final PostRepository postRepository;
-    private final CurtidaRepository curtidaRepository;
+    private final SalvamentoRepository salvamentoRepository;
     private final ComentarioRepository comentarioRepository;
     private final boolean ativo;
 
     public DadosComunidades(AlunoRepository alunoRepository, ComunidadeRepository comunidadeRepository,
-                            PostRepository postRepository, CurtidaRepository curtidaRepository,
+                            PostRepository postRepository, SalvamentoRepository salvamentoRepository,
                             ComentarioRepository comentarioRepository,
                             @Value("${netuni.dados-demonstracao:true}") boolean ativo) {
         this.alunoRepository = alunoRepository;
         this.comunidadeRepository = comunidadeRepository;
         this.postRepository = postRepository;
-        this.curtidaRepository = curtidaRepository;
+        this.salvamentoRepository = salvamentoRepository;
         this.comentarioRepository = comentarioRepository;
         this.ativo = ativo;
     }
@@ -84,12 +84,12 @@ public class DadosComunidades implements CommandLineRunner {
         Post p8 = criarPost(a, design, TipoMidia.IMAGEM, "/demo/logo-conceito.webp",
                 "Estudo de logo para uma atlética. Feedback é bem-vindo!", 20);
 
-        curtir(p1, b); curtir(p1, c);
-        curtir(p2, a); curtir(p2, c);
-        curtir(p3, a);
-        curtir(p4, c); curtir(p4, a);
-        curtir(p5, a); curtir(p5, b);
-        curtir(p8, c);
+        salvar(p1, b); salvar(p1, c);
+        salvar(p2, a); salvar(p2, c);
+        salvar(p3, a);
+        salvar(p4, c); salvar(p4, a);
+        salvar(p5, a); salvar(p5, b);
+        salvar(p8, c);
 
         comentar(p1, c, "Vou usar no slide da A3!");
         comentar(p2, a, "Agora entendi o for each. Valeu!");
@@ -124,11 +124,11 @@ public class DadosComunidades implements CommandLineRunner {
         return postRepository.save(post);
     }
 
-    private void curtir(Post post, Aluno aluno) {
-        Curtida curtida = new Curtida();
-        curtida.setPost(post);
-        curtida.setAluno(aluno);
-        curtidaRepository.save(curtida);
+    private void salvar(Post post, Aluno aluno) {
+        Salvamento salvamento = new Salvamento();
+        salvamento.setPost(post);
+        salvamento.setAluno(aluno);
+        salvamentoRepository.save(salvamento);
     }
 
     private void comentar(Post post, Aluno autor, String texto) {

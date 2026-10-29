@@ -12,15 +12,15 @@ public class PostResponse {
     public String legenda;
     public TipoMidia tipoMidia;
     public String midiaUrl;
-    public long curtidas;
+    public long salvos;
     public long comentarios;
-    public boolean curtiu;
+    public boolean salvou;
     public boolean meu;
     /** Nota calculada pelo algoritmo do feed (so faz sentido no "Para voce"). */
     public double pontuacao;
     public LocalDateTime data;
 
-    public static PostResponse de(Post p, long curtidas, long comentarios, boolean curtiu, Long alunoLogadoId) {
+    public static PostResponse de(Post p, long salvos, long comentarios, boolean salvou, Long alunoLogadoId) {
         PostResponse r = new PostResponse();
         r.id = p.getId();
         r.autor = AlunoResumo.de(p.getAutor());
@@ -28,9 +28,9 @@ public class PostResponse {
         r.legenda = p.getLegenda();
         r.tipoMidia = p.getTipoMidia();
         r.midiaUrl = p.getMidiaUrl();
-        r.curtidas = curtidas;
+        r.salvos = salvos;
         r.comentarios = comentarios;
-        r.curtiu = curtiu;
+        r.salvou = salvou;
         r.meu = p.getAutor().getId().equals(alunoLogadoId);
         r.data = p.getData();
         return r;
