@@ -79,7 +79,7 @@ Se quiser usar PostgreSQL em vez do H2: `mvn spring-boot:run -Dspring-boot.run.p
 
 ## Versão web
 
-Abra `web/index.html` no navegador (ou rode `python3 -m http.server -d web 5500` e acesse `http://localhost:5500`).
+Abra `web/index.html` no navegador (é um arquivo só, o logo já vem dentro dele) (ou rode `python3 -m http.server -d web 5500` e acesse `http://localhost:5500`).
 Ela usa a API publicada no Render. Para usar o backend local, abra `index.html?api=http://localhost:8080`.
 Login de teste: `ana@una.br` / `123456`.
 
