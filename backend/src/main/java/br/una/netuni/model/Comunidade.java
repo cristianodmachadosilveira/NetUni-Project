@@ -2,10 +2,8 @@ package br.una.netuni.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
-/** RF13 - Comunidade de alunos (ex.: "Dev UNA", "Calculo sem Medo"). */
+/** RF13 - Comunidade (ex.: "Dev UNA"). Funciona como etiqueta dos anuncios: o servico pode ser ligado a uma. */
 @Entity
 public class Comunidade {
 
@@ -31,12 +29,6 @@ public class Comunidade {
     @JoinColumn(name = "criador_id")
     private Aluno criador;
 
-    @ManyToMany
-    @JoinTable(name = "comunidade_membro",
-            joinColumns = @JoinColumn(name = "comunidade_id"),
-            inverseJoinColumns = @JoinColumn(name = "aluno_id"))
-    private Set<Aluno> membros = new HashSet<>();
-
     @Column(name = "data_criacao", nullable = false)
     private LocalDateTime dataCriacao = LocalDateTime.now();
 
@@ -57,9 +49,6 @@ public class Comunidade {
 
     public Aluno getCriador() { return criador; }
     public void setCriador(Aluno criador) { this.criador = criador; }
-
-    public Set<Aluno> getMembros() { return membros; }
-    public void setMembros(Set<Aluno> membros) { this.membros = membros; }
 
     public LocalDateTime getDataCriacao() { return dataCriacao; }
     public void setDataCriacao(LocalDateTime dataCriacao) { this.dataCriacao = dataCriacao; }

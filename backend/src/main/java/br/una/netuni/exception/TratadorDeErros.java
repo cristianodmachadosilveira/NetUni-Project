@@ -13,9 +13,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import org.springframework.web.multipart.MultipartException;
-import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /** Transforma qualquer erro em uma resposta JSON padronizada: {"status": 400, "erro": "..."} */
@@ -66,18 +63,6 @@ public class TratadorDeErros {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErroResponse> integridade(DataIntegrityViolationException e) {
         return responder(HttpStatus.CONFLICT, "Registro duplicado ou em conflito com outro dado");
-    }
-
-    /** Upload maior que o limite de spring.servlet.multipart.max-file-size. */
-    @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<ErroResponse> arquivoGrande(MaxUploadSizeExceededException e) {
-        return responder(HttpStatus.valueOf(413), "Arquivo muito grande. O limite e 30 MB");
-    }
-
-    /** POST /midias sem o campo "arquivo" ou sem ser multipart. */
-    @ExceptionHandler({MissingServletRequestPartException.class, MultipartException.class})
-    public ResponseEntity<ErroResponse> uploadInvalido(Exception e) {
-        return responder(HttpStatus.BAD_REQUEST, "Envie o arquivo no campo \"arquivo\" (multipart/form-data)");
     }
 
     @ExceptionHandler(Exception.class)

@@ -150,77 +150,6 @@
   .vazio { text-align: center; color: var(--cinza); padding: 36px 16px; }
   .avatar-letra { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; color: #fff; font-size: 1.1rem; }
 
-  /* ---------------- feed estilo video curto ---------------- */
-  #telaFeed { position: relative; height: calc(100dvh - var(--topo) - var(--rodape)); }
-  .feed { height: 100%; overflow-y: auto; scroll-snap-type: y mandatory; overscroll-behavior: contain; scrollbar-width: none; }
-  .feed::-webkit-scrollbar { display: none; }
-  .slide { height: 100%; scroll-snap-align: start; scroll-snap-stop: always; display: flex; justify-content: center; align-items: center; gap: 18px; padding: 14px 0; position: relative; }
-  .palco { position: relative; height: 100%; aspect-ratio: 9 / 16; max-width: calc(100vw - 110px); border-radius: 20px; overflow: hidden; background: #000; box-shadow: 0 20px 60px rgba(0, 0, 0, .5); border: 1px solid var(--linha); cursor: pointer; user-select: none; -webkit-user-select: none; }
-  .palco video, .palco .foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
-  .palco .desfoque { position: absolute; inset: -30px; background-size: cover; background-position: center; filter: blur(28px) brightness(.55); }
-  .palco .texto-post { position: absolute; inset: 0; display: grid; place-items: center; padding: 34px 28px 120px; text-align: center; font-size: clamp(1.3rem, 2.6vh, 1.9rem); font-weight: 700; line-height: 1.3; }
-  .palco .icone-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 78px; height: 78px; opacity: 0; transition: opacity .2s; pointer-events: none; color: rgba(255, 255, 255, .85); filter: drop-shadow(0 4px 12px rgba(0, 0, 0, .5)); }
-  .palco.pausado .icone-play { opacity: 1; }
-  .legenda-area { position: absolute; left: 0; right: 0; bottom: 0; padding: 70px 16px 20px; background: linear-gradient(transparent, rgba(2, 6, 22, .85)); z-index: 2; text-shadow: 0 1px 3px rgba(0, 0, 0, .6); cursor: default; }
-  .legenda-area .autor { background: none; border: 0; color: #fff; font-weight: 800; font-size: 1.05rem; cursor: pointer; padding: 0; }
-  .legenda-area .legenda { margin: 6px 0 4px; color: #eef3ff; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; }
-  .legenda-area .legenda.aberta { -webkit-line-clamp: unset; }
-  .legenda-area .quando { font-size: .8rem; color: #c4d2f0; }
-  .chip-com { display: inline-flex; align-items: center; gap: 6px; margin-left: 8px; padding: 2px 10px; border-radius: 99px; font-size: .8rem; font-weight: 700; background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .25); color: #fff; cursor: pointer; text-shadow: none; }
-  .progresso { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255, 255, 255, .18); z-index: 3; }
-  .progresso i { display: block; height: 100%; width: 0; background: var(--anel); box-shadow: 0 0 8px var(--anel); }
-  .acoes-post { display: flex; flex-direction: column; align-items: center; gap: 14px; align-self: flex-end; padding-bottom: 40px; z-index: 3; }
-  .acoes-post .avatar-letra { width: 50px; height: 50px; border: 2px solid #fff; cursor: pointer; }
-  .acao { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: 0; color: var(--texto); cursor: pointer; font-size: .8rem; font-weight: 700; padding: 0; }
-  .acao .bola { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, .1); border: 1px solid var(--linha); transition: transform .15s, background .15s; }
-  .acao .bola svg { width: 24px; height: 24px; }
-  .acao:hover .bola { background: rgba(255, 255, 255, .18); }
-  .acao:active .bola { transform: scale(.9); }
-  .acao.salvo .bola { color: #ffd166; background: rgba(255, 209, 102, .15); border-color: rgba(255, 209, 102, .5); }
-  .acao.salvo .bola svg { animation: pulsar .35s ease; }
-  @keyframes pulsar { 40% { transform: scale(1.35); } }
-  .feed-topo { position: absolute; top: 12px; left: 0; right: 0; display: flex; justify-content: center; z-index: 5; pointer-events: none; padding: 0 12px; }
-  .chips { pointer-events: auto; display: flex; gap: 8px; overflow-x: auto; max-width: min(100%, 620px); padding: 4px; scrollbar-width: none; }
-  .chips::-webkit-scrollbar { display: none; }
-  .chip { flex: none; display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 99px; border: 1px solid rgba(255, 255, 255, .2); background: rgba(4, 10, 36, .6); backdrop-filter: blur(8px); color: #dfe8ff; font-weight: 700; cursor: pointer; white-space: nowrap; }
-  .chip.ativo { background: #fff; color: #04122e; }
-  .fab { position: absolute; right: 26px; bottom: 26px; z-index: 6; width: 58px; height: 58px; border-radius: 50%; border: 0; cursor: pointer; display: grid; place-items: center; color: #04122e; background: linear-gradient(135deg, var(--anel), var(--ciano)); box-shadow: 0 0 26px rgba(46, 230, 160, .45); }
-  .fab svg { width: 28px; height: 28px; }
-  .fim-feed { flex-direction: column; text-align: center; color: var(--cinza); gap: 14px; }
-  .fim-feed .img-logo { width: 90px; height: 90px; }
-  .carregando-feed { height: 100%; display: grid; place-items: center; color: var(--cinza); }
-  .esqueleto { width: min(420px, 80vw); aspect-ratio: 9 / 16; max-height: 90%; border-radius: 20px; background: linear-gradient(110deg, rgba(255, 255, 255, .04) 30%, rgba(255, 255, 255, .1) 50%, rgba(255, 255, 255, .04) 70%); background-size: 200% 100%; animation: brilho 1.3s linear infinite; }
-  @keyframes brilho { to { background-position: -200% 0; } }
-  @media (max-width: 760px) {
-    .slide { padding: 0; }
-    .palco { width: 100%; max-width: none; aspect-ratio: auto; border-radius: 0; border: 0; }
-    .acoes-post { position: absolute; right: 8px; bottom: 84px; padding: 0; gap: 12px; }
-    .acao .bola { width: 44px; height: 44px; background: rgba(4, 10, 36, .45); }
-    .legenda-area { padding-right: 76px; }
-    .feed-topo { justify-content: flex-start; padding-right: 64px; }
-    .fab { top: 14px; right: 10px; bottom: auto; width: 44px; height: 44px; }
-    .fab svg { width: 22px; height: 22px; }
-  }
-  .feed-unico { height: min(80vh, 760px); border-radius: 20px; }
-  .feed-unico .slide { padding: 0; }
-  .feed-unico .palco { max-width: 100%; }
-
-  /* gaveta de comentarios */
-  .gaveta { position: fixed; inset: 0; z-index: 30; background: rgba(2, 6, 22, .5); display: flex; justify-content: flex-end; }
-  .gaveta-corpo { width: min(420px, 100%); height: 100%; background: linear-gradient(180deg, #0f1f5a, var(--painel-forte)); border-left: 1px solid var(--linha); display: flex; flex-direction: column; animation: entrarDireita .25s ease; }
-  @keyframes entrarDireita { from { transform: translateX(40px); opacity: 0; } }
-  .gaveta-topo { display: flex; justify-content: space-between; align-items: center; padding: 16px 18px; border-bottom: 1px solid var(--linha); }
-  .gaveta-lista { flex: 1; overflow-y: auto; padding: 14px 18px; display: grid; gap: 14px; align-content: start; }
-  .comentario { display: flex; gap: 10px; }
-  .comentario .avatar-letra { width: 36px; height: 36px; font-size: .9rem; }
-  .comentario b { display: block; font-size: .85rem; color: var(--cinza); }
-  .gaveta form { display: flex; gap: 8px; padding: 12px 14px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--linha); }
-  @media (max-width: 760px) {
-    .gaveta { align-items: flex-end; }
-    .gaveta-corpo { height: 72vh; border-left: 0; border-top: 1px solid var(--linha); border-radius: 20px 20px 0 0; animation: entrarBaixo .25s ease; }
-    @keyframes entrarBaixo { from { transform: translateY(60px); opacity: 0; } }
-  }
-
   /* comunidades */
   .com-grade { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; margin-bottom: 30px; }
   .com-card { border-radius: 20px; overflow: hidden; background: var(--painel); border: 1px solid var(--linha); display: flex; flex-direction: column; transition: transform .15s, box-shadow .15s; }
@@ -231,6 +160,12 @@
   .com-corpo h3 { margin: 0; }
   .com-corpo p { margin: 0; color: var(--cinza); font-size: .92rem; }
   .com-acoes { display: flex; gap: 8px; margin-top: auto; padding-top: 12px; }
+  .com-card { cursor: pointer; }
+  .tag-com { display: inline-flex; align-items: center; gap: 5px; margin-left: 6px; padding: 2px 10px; border-radius: 99px; font-size: .75rem; font-weight: 800; color: #fff; background: color-mix(in srgb, var(--c) 35%, transparent); border: 1px solid color-mix(in srgb, var(--c) 70%, transparent); cursor: pointer; vertical-align: middle; }
+  .com-topo { border-radius: 20px; overflow: hidden; border: 1px solid var(--linha); margin-bottom: 18px; background: var(--painel); }
+  .com-topo .com-banner { height: 110px; }
+  .com-topo .com-corpo { padding: 36px 18px 18px; }
+  .com-topo .linha { flex: none; align-items: center; }
   .emojis { display: flex; flex-wrap: wrap; gap: 6px; }
   .emojis button { width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--linha); background: rgba(4, 10, 36, .7); font-size: 1.3rem; cursor: pointer; }
   .emojis button.ativo { border-color: var(--ciano); box-shadow: 0 0 0 3px rgba(25, 184, 255, .25); }
@@ -269,13 +204,6 @@
   }
 
   /* perfil */
-  .grade-posts { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
-  @media (max-width: 760px) { .grade-posts { grid-template-columns: repeat(3, 1fr); } }
-  .mini { aspect-ratio: 9 / 16; position: relative; overflow: hidden; border-radius: 10px; cursor: pointer; background: #000; border: 1px solid var(--linha); }
-  .mini img, .mini video { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .mini .n { position: absolute; left: 6px; bottom: 4px; font-size: .78rem; font-weight: 700; display: flex; align-items: center; gap: 4px; text-shadow: 0 1px 3px #000; }
-  .mini .n svg { width: 14px; height: 14px; }
-  .mini.texto { padding: 10px; font-size: .78rem; font-weight: 700; display: flex; align-items: center; text-align: center; }
   .cabeca-perfil { display: flex; gap: 16px; align-items: center; margin-bottom: 8px; }
   .cabeca-perfil .avatar-letra { width: 72px; height: 72px; font-size: 1.8rem; }
   .numeros { display: flex; gap: 22px; margin: 10px 0 16px; }
@@ -303,7 +231,7 @@
 
   .toast { position: fixed; left: 50%; bottom: calc(24px + var(--rodape)); transform: translateX(-50%); background: #fff; color: #04122e; padding: 10px 18px; border-radius: 99px; font-weight: 700; z-index: 50; box-shadow: 0 10px 30px rgba(0, 0, 0, .4); animation: subir .25s ease; }
   @keyframes subir { from { transform: translate(-50%, 12px); opacity: 0; } }
-  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .feed { scroll-behavior: auto; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
@@ -312,9 +240,8 @@
   <div class="container">
     <div class="logo" id="logoTopo"><span class="img-logo" role="img" aria-label="Logo do NetUni"></span><b>Net<span>Uni</span></b></div>
     <nav id="menu" class="hidden" aria-label="Menu principal">
-      <button data-v="feed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>Feed</button>
+      <button data-v="explorar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg>Anúncios</button>
       <button data-v="comunidades"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><circle cx="17" cy="7" r="2.5"/><path d="M16 13c2.7 0 4.8 1.6 5.5 4.5"/></svg>Comunidades</button>
-      <button data-v="explorar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg>Serviços</button>
       <button data-v="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12z"/></svg>Chat</button>
       <button data-v="perfil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.2-6 8-6s7 2 8 6"/></svg>Perfil</button>
     </nav>
@@ -332,7 +259,7 @@
       <div>
         <p class="eyebrow">Alunos da UNA em órbita</p>
         <h1>Seu colega pode ser <em>quem resolve</em> o que você precisa.</h1>
-        <p>O NetUni conecta alunos da UNA: quem sabe fazer oferece o serviço, quem precisa publica o pedido. Siga comunidades, assista a dicas em vídeo curto e converse pelo chat. O pagamento é combinado entre vocês, fora do app.</p>
+        <p>O NetUni conecta alunos da UNA: quem sabe fazer oferece o serviço, quem precisa publica o pedido. Filtre os anúncios por comunidade e combine tudo pelo chat. O pagamento é combinado entre vocês, fora do app.</p>
         <div class="acoes">
           <button class="btn grande" onclick="irParaAuth('cadastro')">Criar conta</button>
           <button class="btn grande sec" onclick="irParaAuth('login')">Já tenho conta</button>
@@ -351,7 +278,7 @@
       <div class="grade">
         <div class="card pedido"><span class="selo PEDIDO">PEDIDO</span><h3>Preciso de ajuda</h3><p>Publique o que você precisa, como reforço de cálculo, ajuda com um trabalho ou um design, e espere um colega se oferecer.</p></div>
         <div class="card oferta"><span class="selo OFERTA">OFERTA</span><h3>Posso ajudar</h3><p>Anuncie sua habilidade e o preço que combina com você. Cada serviço concluído vira item do seu portfólio.</p></div>
-        <div class="card social"><h3>Feed e comunidades</h3><p>Vídeos curtos e fotos com dicas, monitorias e projetos. Entre nas comunidades do seu curso e role de tela em tela.</p></div>
+        <div class="card social"><h3>Comunidades</h3><p>Cada anúncio pode ter a etiqueta de uma comunidade, como Dev UNA ou Cálculo sem Medo. Use a aba Comunidades como filtro.</p></div>
         <div class="card"><h3>Chat e reputação</h3><p>Combine tudo pelo chat. Depois de concluído, o contratante avalia de 1 a 5 e a média aparece no perfil.</p></div>
       </div>
     </div>
@@ -361,7 +288,7 @@
     <div class="container">
       <h2>Como funciona</h2>
       <ol class="passos">
-        <li><b>Publique ou procure.</b> Use a busca por tipo e texto, ou descubra colegas pelo feed e pelas comunidades.</li>
+        <li><b>Publique ou procure.</b> Use a busca por tipo e texto, ou filtre pela comunidade.</li>
         <li><b>Solicite.</b> O autor do serviço aceita e vocês combinam valor e forma de pagamento pelo chat.</li>
         <li><b>Execute e conclua.</b> O prestador inicia, o contratante confirma a conclusão.</li>
         <li><b>Avalie.</b> A nota fica no perfil e o serviço entra no portfólio.</li>
@@ -411,19 +338,10 @@
 
 <!-- APP -->
 <main id="app" class="app hidden">
-  <div id="telaFeed" class="hidden"></div>
   <div class="container" id="conteudo"></div>
 </main>
 
 <div id="modal" class="fundo hidden"><div class="janela" id="janela"><button class="fechar" onclick="fecharModal()" aria-label="Fechar">×</button><div id="modalCorpo"></div></div></div>
-
-<div id="gaveta" class="gaveta hidden">
-  <div class="gaveta-corpo">
-    <div class="gaveta-topo"><h3 style="margin:0" id="gavetaTitulo">Comentários</h3><button class="fechar" style="position:static" onclick="fecharGaveta()" aria-label="Fechar">×</button></div>
-    <div class="gaveta-lista" id="gavetaLista"></div>
-    <form id="formComentario"><input id="textoComentario" placeholder="Adicione um comentário..." maxlength="500" required autocomplete="off"><button class="btn peq">Enviar</button></form>
-  </div>
-</div>
 
 <script>
 // ================================================================ estado e API
@@ -441,12 +359,10 @@ const estado = {
   usuario: null,
   tela: null,
   tipo: '', busca: '',
-  feedComunidade: null,      // {id, nome, icone, cor} ou null = "Para voce"
-  som: false,                // videos comecam mudos (regra dos navegadores)
-  minhasComunidades: [],
+  comunidades: [],
+  comunidadeAberta: null,    // comunidade escolhida na aba Comunidades (filtro)
   conversaAberta: null,
-  timerChat: null,
-  observador: null
+  timerChat: null
 };
 
 async function chamar(metodo, caminho, corpo) {
@@ -482,8 +398,6 @@ const dinheiro = (v) => v == null ? 'a combinar' : Number(v).toLocaleString('pt-
 const dataBR = (d) => d ? new Date(d).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : '';
 const hora = (d) => d ? new Date(d).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
 const NOME_STATUS = { SOLICITADA: 'Solicitada', ACEITA: 'Aceita', EM_ANDAMENTO: 'Em andamento', CONCLUIDA: 'Concluída', CANCELADA: 'Cancelada' };
-const urlMidia = (u) => !u ? '' : (u.startsWith('/') ? estado.api + u : u);
-const capaDemo = (u) => (u && u.startsWith('/demo/') && u.endsWith('.mp4')) ? urlMidia(u.replace('.mp4', '-capa.webp')) : '';
 const compacto = (n) => n >= 1000 ? (n / 1000).toFixed(1).replace('.0', '') + ' mil' : String(n);
 
 function tempo(d) {
@@ -524,7 +438,6 @@ function abrirModal(html, classe) {
   $('#modal').classList.remove('hidden');
 }
 function fecharModal() {
-  $('#modal').querySelectorAll('video').forEach(v => v.pause());
   $('#modal').classList.add('hidden'); $('#modalCorpo').innerHTML = '';
   if (estado.tela === 'chat') carregarConversas(true);
 }
@@ -549,7 +462,7 @@ function trocarAuth(aba) {
   $('#tabLogin').classList.toggle('ativo', login);
   $('#tabCadastro').classList.toggle('ativo', !login);
 }
-$('#logoTopo').onclick = () => { if (estado.token && estado.usuario) ir('feed'); else mostrar('landing'); };
+$('#logoTopo').onclick = () => { if (estado.token && estado.usuario) ir('explorar'); else mostrar('landing'); };
 $('#btnEntrar').onclick = () => irParaAuth('login');
 $('#btnSair').onclick = () => { sair(); };
 $('#preencherDemo').onclick = () => { const f = $('#formLogin'); f.email.value = 'ana@una.br'; f.senha.value = '123456'; };
@@ -616,7 +529,7 @@ function entrar(resp) {
   $('#btnEntrar').classList.add('hidden');
   $('#btnSair').classList.remove('hidden');
   mostrar('app');
-  ir('feed');
+  ir('explorar');
 }
 function sair() {
   pararTudo();
@@ -625,360 +538,94 @@ function sair() {
   $('#menu').classList.add('hidden');
   $('#btnEntrar').classList.remove('hidden');
   $('#btnSair').classList.add('hidden');
-  fecharModal(); fecharGaveta();
-  document.body.classList.remove('modo-cheio', 'modo-chat');
+  fecharModal();
+  document.body.classList.remove('modo-chat');
   mostrar('landing');
 }
 
 // ================================================================ navegacao
-document.querySelectorAll('#menu button').forEach(b => b.onclick = () => ir(b.dataset.v));
+document.querySelectorAll('#menu button').forEach(b => b.onclick = () => { if (b.dataset.v === 'comunidades') estado.comunidadeAberta = null; ir(b.dataset.v); });
 function pararTudo() {
   clearInterval(estado.timerChat); estado.timerChat = null;
-  if (estado.observador) { estado.observador.disconnect(); estado.observador = null; }
-  document.querySelectorAll('#telaFeed video').forEach(v => v.pause());
 }
 function ir(tela) {
   pararTudo();
   estado.tela = tela;
   document.querySelectorAll('#menu button').forEach(b => b.classList.toggle('ativo', b.dataset.v === tela || (tela === 'contratacoes' && b.dataset.v === 'chat')));
-  const cheio = tela === 'feed';
-  document.body.classList.toggle('modo-cheio', cheio);
   document.body.classList.toggle('modo-chat', tela === 'chat');
-  $('#telaFeed').classList.toggle('hidden', !cheio);
-  $('#conteudo').classList.toggle('hidden', cheio);
-  if (!cheio) $('#telaFeed').innerHTML = '';
   window.scrollTo(0, 0);
-  ({ feed: telaFeed, comunidades: telaComunidades, explorar: telaExplorar, chat: telaChat, contratacoes: telaContratacoes, perfil: telaPerfil })[tela]();
+  ({ comunidades: telaComunidades, explorar: telaExplorar, chat: telaChat, contratacoes: telaContratacoes, perfil: telaPerfil })[tela]();
 }
 const carregando = (msg = 'Carregando...') => `<p class="vazio">${msg}</p>`;
 const falha = (err) => `<p class="vazio erro">${esc(err.message)}</p>`;
 function semRecursoNovo(err) {
   return err.status === 404 && /rota/i.test(err.message)
-    ? 'A API publicada ainda é a versão antiga, sem feed e comunidades. Faça o deploy da versão nova do backend (ou use ?api=http://localhost:8080).'
+    ? 'A API publicada ainda é a versão antiga, sem comunidades. Faça o deploy da versão nova do backend (ou use ?api=http://localhost:8080).'
     : err.message;
 }
 
-async function carregarMinhasComunidades() {
+async function carregarComunidades() {
   try {
-    const todas = await chamar('GET', '/comunidades');
-    estado.minhasComunidades = todas.filter(c => c.souMembro);
-    return todas;
-  } catch (e) { estado.minhasComunidades = []; throw e; }
+    estado.comunidades = await chamar('GET', '/comunidades');
+  } catch (e) { estado.comunidades = []; throw e; }
+  return estado.comunidades;
 }
 
-// ================================================================ FEED (RF14 / RF15)
-async function telaFeed() {
-  const alvo = $('#telaFeed');
-  alvo.innerHTML = `
-    <div class="feed-topo"><div class="chips" id="chips"></div></div>
-    <div class="feed" id="feed"><div class="carregando-feed"><div class="esqueleto"></div></div></div>
-    <button class="fab" id="novoPost" title="Novo post" aria-label="Novo post">${ICONE.mais}</button>`;
-  $('#novoPost').onclick = formNovoPost;
-  carregarMinhasComunidades().then(desenharChips).catch(() => desenharChips());
-  desenharChips();
-  try {
-    const q = estado.feedComunidade ? '?comunidadeId=' + estado.feedComunidade.id : '';
-    const posts = await chamar('GET', '/feed' + q);
-    if (estado.tela !== 'feed') return;
-    if (estado.destaquePost) {   // post recem-publicado aparece primeiro
-      const i = posts.findIndex(p => p.id === estado.destaquePost);
-      if (i > 0) posts.unshift(posts.splice(i, 1)[0]);
-      estado.destaquePost = null;
-    }
-    montarFeed($('#feed'), posts, true);
-  } catch (err) {
-    $('#feed').innerHTML = `<div class="carregando-feed"><p class="vazio erro" style="max-width:480px">${esc(semRecursoNovo(err))}</p></div>`;
-  }
-}
-
-function desenharChips() {
-  const caixa = $('#chips'); if (!caixa) return;
-  const atual = estado.feedComunidade;
-  const lista = [...estado.minhasComunidades];
-  if (atual && !lista.some(c => c.id === atual.id)) lista.unshift(atual);
-  caixa.innerHTML = `<button class="chip ${!atual ? 'ativo' : ''}" data-c="">✨ Para você</button>` +
-    lista.map(c => `<button class="chip ${atual && atual.id === c.id ? 'ativo' : ''}" data-c="${c.id}">${esc(c.icone || '🪐')} ${esc(c.nome)}</button>`).join('') +
-    `<button class="chip" data-c="todas">+ Comunidades</button>`;
-  caixa.querySelectorAll('.chip').forEach(b => b.onclick = () => {
-    if (b.dataset.c === 'todas') { ir('comunidades'); return; }
-    estado.feedComunidade = b.dataset.c ? lista.find(c => String(c.id) === b.dataset.c) : null;
-    telaFeed();
-  });
-}
-
-function slideHTML(p) {
-  const cor = (p.comunidade && p.comunidade.cor) || '#2f6bff';
-  let midia = '';
-  if (p.tipoMidia === 'VIDEO') {
-    const capa = capaDemo(p.midiaUrl);
-    midia = `<video src="${esc(urlMidia(p.midiaUrl))}" ${capa ? `poster="${esc(capa)}"` : ''} playsinline muted loop preload="metadata"></video>
-             <span class="icone-play">${ICONE.play}</span><div class="progresso"><i></i></div>`;
-  } else if (p.tipoMidia === 'IMAGEM') {
-    const u = esc(urlMidia(p.midiaUrl));
-    midia = `<div class="desfoque" style="background-image:url('${u}')"></div><img class="foto" src="${u}" alt="${esc(p.legenda || 'Imagem do post')}" loading="lazy" draggable="false">`;
-  } else {
-    midia = `<div class="desfoque" style="background:radial-gradient(circle at 30% 20%, ${esc(cor)}, transparent 60%), linear-gradient(160deg, ${esc(cor)}, #040a24 75%);filter:none;inset:0"></div><div class="texto-post">${esc(p.legenda)}</div>`;
-  }
-  const legenda = p.tipoMidia === 'TEXTO' ? '' : `<p class="legenda">${esc(p.legenda || '')}</p>`;
-  return `
-  <section class="slide" data-id="${p.id}" id="post-${p.id}">
-    <div class="palco" data-tipo="${p.tipoMidia}">
-      ${midia}
-      <div class="legenda-area">
-        <button class="autor" data-autor="${p.autor.id}">@${esc(p.autor.nome)}</button>${p.comunidade ? `<button class="chip-com" data-com="${p.comunidade.id}">${esc(p.comunidade.icone || '🪐')} ${esc(p.comunidade.nome)}</button>` : ''}
-        ${legenda}
-        <span class="quando">${esc(p.autor.curso || 'UNA')} · ${tempo(p.data)}</span>
-      </div>
-    </div>
-    <div class="acoes-post">
-      ${avatar(p.autor.nome, `data-autor="${p.autor.id}" title="Ver perfil"`)}
-      <button class="acao" data-acao="comentar" aria-label="Comentários"><span class="bola">${ICONE.balao}</span><span class="n">${compacto(p.comentarios)}</span></button>
-      <button class="acao ${p.salvou ? 'salvo' : ''}" data-acao="salvar" aria-label="Salvar"><span class="bola">${ICONE.salvar}</span><span class="n">${compacto(p.salvos)}</span></button>
-      <button class="acao" data-acao="compartilhar" aria-label="Copiar link"><span class="bola">${ICONE.enviar}</span><span>Enviar</span></button>
-      ${p.tipoMidia === 'VIDEO' ? `<button class="acao" data-acao="som" aria-label="Som"><span class="bola">${estado.som ? ICONE.somOn : ICONE.somOff}</span><span>Som</span></button>` : ''}
-      ${p.meu ? `<button class="acao" data-acao="apagar" aria-label="Apagar post"><span class="bola">${ICONE.lixo}</span><span>Apagar</span></button>` : ''}
-    </div>
-  </section>`;
-}
-
-/** Desenha os slides num container rolavel e liga comentar, salvar, video que toca ao aparecer, etc. */
-function montarFeed(container, posts, comFim) {
-  if (!posts.length) {
-    container.innerHTML = `<section class="slide fim-feed"><span class="img-logo"></span><h3>Nada por aqui ainda</h3><p>Seja a primeira pessoa a postar${estado.feedComunidade ? ' nesta comunidade' : ''}!</p><button class="btn" onclick="formNovoPost()">Criar post</button></section>`;
-    return;
-  }
-  const porId = new Map(posts.map(p => [String(p.id), p]));
-  container.innerHTML = posts.map(slideHTML).join('') + (comFim ? `
-    <section class="slide fim-feed"><span class="img-logo"></span><h3>Você viu tudo por agora</h3>
-      <p>Entre em mais comunidades para ver mais posts.</p>
-      <div class="linha" style="flex:none;justify-content:center"><button class="btn" onclick="ir('comunidades')">Ver comunidades</button>
-      <button class="btn sec" onclick="document.getElementById('feed').scrollTo({top:0,behavior:'smooth'})">Voltar ao topo</button></div></section>` : '');
-
-  // videos: tocam quando o slide aparece e pausam quando sai (IntersectionObserver)
-  const obs = new IntersectionObserver(entradas => {
-    entradas.forEach(en => {
-      const v = en.target.querySelector('video');
-      if (!v) return;
-      if (en.isIntersecting && en.intersectionRatio >= 0.6) {
-        v.muted = !estado.som;
-        v.play().then(() => en.target.querySelector('.palco').classList.remove('pausado')).catch(() => {});
-      } else {
-        v.pause();
-      }
-    });
-  }, { root: container, threshold: [0, 0.6] });
-  container.querySelectorAll('.slide[data-id]').forEach(s => {
-    obs.observe(s);
-    const v = s.querySelector('video');
-    if (v) v.addEventListener('timeupdate', () => {
-      const barra = s.querySelector('.progresso i');
-      if (barra && v.duration) barra.style.width = (v.currentTime / v.duration * 100) + '%';
-    });
-  });
-  if (container.id === 'feed') estado.observador = obs;
-  else container._observador = obs;
-
-  // um toque no video pausa ou continua
-  container.onclick = async (e) => {
-    const slide = e.target.closest('.slide[data-id]');
-    if (!slide) return;
-    const post = porId.get(slide.dataset.id);
-    const autor = e.target.closest('[data-autor]');
-    if (autor) { verPerfilDe(Number(autor.dataset.autor)); return; }
-    const com = e.target.closest('[data-com]');
-    if (com) { fecharModal(); estado.feedComunidade = post.comunidade; ir('feed'); return; }
-    if (e.target.closest('.legenda')) { e.target.closest('.legenda').classList.toggle('aberta'); return; }
-    const botao = e.target.closest('[data-acao]');
-    if (botao) { acaoDoPost(botao.dataset.acao, post, slide, container); return; }
-    const palco = e.target.closest('.palco');
-    if (!palco || e.target.closest('.legenda-area')) return;
-    const v = palco.querySelector('video');
-    if (!v) return;
-    if (v.paused) { v.play().catch(() => {}); palco.classList.remove('pausado'); }
-    else { v.pause(); palco.classList.add('pausado'); }
-  };
-  const alvo = location.hash.match(/^#post-(\d+)$/);
-  if (alvo && container.id === 'feed') { const s = document.getElementById('post-' + alvo[1]); if (s) s.scrollIntoView(); }
-}
-
-async function acaoDoPost(acao, post, slide, container) {
-  if (acao === 'salvar') {
-    const botao = slide.querySelector('[data-acao="salvar"]');
-    // atualiza na hora e confirma com a API
-    post.salvou = !post.salvou; post.salvos += post.salvou ? 1 : -1;
-    botao.classList.toggle('salvo', post.salvou); botao.querySelector('.n').textContent = compacto(post.salvos);
-    try {
-      const r = await chamar('POST', '/posts/' + post.id + '/salvo');
-      post.salvou = r.salvou; post.salvos = r.salvos;
-      aviso(post.salvou ? 'Salvo! Veja na aba Salvos do seu perfil' : 'Removido dos salvos');
-    } catch (err) {
-      post.salvou = !post.salvou; post.salvos += post.salvou ? 1 : -1; aviso(semRecursoNovo(err));
-    }
-    botao.classList.toggle('salvo', post.salvou); botao.querySelector('.n').textContent = compacto(post.salvos);
-  } else if (acao === 'comentar') {
-    abrirComentarios(post, slide);
-  } else if (acao === 'compartilhar') {
-    const link = location.href.split('#')[0] + '#post-' + post.id;
-    try { await navigator.clipboard.writeText(link); aviso('Link do post copiado'); }
-    catch (e) { prompt('Copie o link do post:', link); }
-  } else if (acao === 'som') {
-    estado.som = !estado.som;
-    document.querySelectorAll('video').forEach(v => { v.muted = !estado.som; });
-    document.querySelectorAll('[data-acao="som"] .bola').forEach(b => { b.innerHTML = estado.som ? ICONE.somOn : ICONE.somOff; });
-    const v = slide.querySelector('video'); if (v && v.paused) v.play().catch(() => {});
-    aviso(estado.som ? 'Som ligado' : 'Som desligado');
-  } else if (acao === 'apagar') {
-    if (!confirm('Apagar este post?')) return;
-    try {
-      await chamar('DELETE', '/posts/' + post.id);
-      slide.remove(); aviso('Post apagado');
-      if (!container.querySelector('.slide[data-id]') && container.id !== 'feed') fecharModal();
-    } catch (err) { aviso(err.message); }
-  }
-}
-
-// ---------------- comentarios
-let postDaGaveta = null;
-async function abrirComentarios(post, slide) {
-  postDaGaveta = { post, slide };
-  $('#gaveta').classList.remove('hidden');
-  $('#gavetaTitulo').textContent = 'Comentários';
-  $('#gavetaLista').innerHTML = carregando();
-  try {
-    const lista = await chamar('GET', '/posts/' + post.id + '/comentarios');
-    $('#gavetaTitulo').textContent = lista.length + (lista.length === 1 ? ' comentário' : ' comentários');
-    $('#gavetaLista').innerHTML = lista.length ? lista.map(c => `
-      <div class="comentario">${avatar(c.autor.nome)}<div><b>${esc(c.autor.nome)} · ${tempo(c.data)}</b>${esc(c.texto)}</div></div>`).join('')
-      : '<p class="vazio">Seja a primeira pessoa a comentar.</p>';
-    $('#gavetaLista').scrollTop = $('#gavetaLista').scrollHeight;
-  } catch (err) { $('#gavetaLista').innerHTML = falha(err); }
-  setTimeout(() => $('#textoComentario').focus(), 50);
-}
-function fecharGaveta() { $('#gaveta').classList.add('hidden'); postDaGaveta = null; }
-$('#gaveta').addEventListener('click', e => { if (e.target.id === 'gaveta') fecharGaveta(); });
-$('#formComentario').onsubmit = async (e) => {
-  e.preventDefault();
-  if (!postDaGaveta) return;
-  const { post, slide } = postDaGaveta;
-  try {
-    await chamar('POST', '/posts/' + post.id + '/comentarios', { texto: $('#textoComentario').value.trim() });
-    $('#textoComentario').value = '';
-    post.comentarios += 1;
-    const n = slide.querySelector('[data-acao="comentar"] .n'); if (n) n.textContent = compacto(post.comentarios);
-    abrirComentarios(post, slide);
-  } catch (err) { aviso(err.message); }
-};
-
-// ---------------- novo post
-const TIPOS_ACEITOS = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'video/mp4', 'video/webm', 'video/quicktime'];
-async function formNovoPost() {
-  if (!estado.minhasComunidades.length) { try { await carregarMinhasComunidades(); } catch (e) {} }
-  const escolhida = estado.feedComunidade && estado.minhasComunidades.some(c => c.id === estado.feedComunidade.id) ? estado.feedComunidade.id : '';
-  abrirModal(`
-    <h2>Novo post</h2>
-    <label>Onde publicar</label>
-    <select id="pCom"><option value="">Público (sem comunidade)</option>
-      ${estado.minhasComunidades.map(c => `<option value="${c.id}" ${c.id === escolhida ? 'selected' : ''}>${esc(c.icone || '')} ${esc(c.nome)}</option>`).join('')}</select>
-    <label class="arquivo"><input type="file" id="pArq" accept="image/*,video/*">📷 Escolher foto ou vídeo (até 30 MB)</label>
-    <div class="previa" id="pPrevia"></div>
-    <label>Legenda ${'<span class="meta">(sem arquivo, vira um post só de texto)</span>'}</label>
-    <textarea id="pLeg" maxlength="500" placeholder="Conte o que está acontecendo..."></textarea>
-    <p class="erro" id="pErro"></p>
-    <button class="btn" id="pPublicar" style="width:100%">Publicar</button>`);
-  let arquivo = null;
-  $('#pArq').onchange = (e) => {
-    arquivo = e.target.files[0] || null;
-    $('#pErro').textContent = '';
-    $('#pPrevia').innerHTML = '';
-    if (!arquivo) return;
-    if (!TIPOS_ACEITOS.includes(arquivo.type)) { $('#pErro').textContent = 'Formato não aceito. Use JPG, PNG, WEBP, GIF, MP4, WEBM ou MOV.'; arquivo = null; return; }
-    if (arquivo.size > 30 * 1024 * 1024) { $('#pErro').textContent = 'Arquivo muito grande. O limite é 30 MB.'; arquivo = null; return; }
-    const url = URL.createObjectURL(arquivo);
-    $('#pPrevia').innerHTML = arquivo.type.startsWith('video/') ? `<video src="${url}" muted autoplay loop playsinline></video>` : `<img src="${url}" alt="Prévia">`;
-  };
-  $('#pPublicar').onclick = async (e) => {
-    const legenda = $('#pLeg').value.trim();
-    const comunidadeId = $('#pCom').value ? Number($('#pCom').value) : null;
-    if (!arquivo && !legenda) { $('#pErro').textContent = 'Escolha uma foto/vídeo ou escreva alguma coisa.'; return; }
-    e.target.disabled = true;
-    try {
-      let tipoMidia = 'TEXTO', midiaUrl = null;
-      if (arquivo) {
-        e.target.textContent = arquivo.type.startsWith('video/') ? 'Enviando vídeo...' : 'Enviando foto...';
-        const fd = new FormData(); fd.append('arquivo', arquivo);
-        const m = await chamar('POST', '/midias', fd);
-        tipoMidia = m.tipoMidia; midiaUrl = m.url;
-      }
-      e.target.textContent = 'Publicando...';
-      const novo = await chamar('POST', '/posts', { comunidadeId, tipoMidia, midiaUrl, legenda });
-      fecharModal();
-      estado.destaquePost = novo.id;
-      estado.feedComunidade = comunidadeId ? estado.minhasComunidades.find(c => c.id === comunidadeId) : null;
-      aviso('Post publicado!');
-      ir('feed');
-    } catch (err) {
-      $('#pErro').textContent = semRecursoNovo(err);
-      e.target.disabled = false; e.target.textContent = 'Publicar';
-    }
-  };
-}
-
-// navegar no feed pelo teclado (setas)
-document.addEventListener('keydown', (e) => {
-  if (estado.tela !== 'feed' || !$('#modal').classList.contains('hidden') || !$('#gaveta').classList.contains('hidden')) return;
-  if (/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
-  const feed = $('#feed'); if (!feed) return;
-  if (e.key === 'ArrowDown' || e.key === 'j') { e.preventDefault(); feed.scrollBy({ top: feed.clientHeight, behavior: 'smooth' }); }
-  if (e.key === 'ArrowUp' || e.key === 'k') { e.preventDefault(); feed.scrollBy({ top: -feed.clientHeight, behavior: 'smooth' }); }
-});
-
-// ================================================================ COMUNIDADES (RF13)
+// ================================================================ COMUNIDADES (RF13): funcionam como filtro
+// O anunciante escolhe a comunidade (etiqueta) ao publicar. Aqui a aba mostra so os anuncios
+// daquela comunidade, e eles continuam aparecendo na lista geral de Anuncios.
 async function telaComunidades() {
+  if (estado.comunidadeAberta) { telaUmaComunidade(estado.comunidadeAberta); return; }
   $('#conteudo').innerHTML = `
     <div class="titulo-tela"><h2>Comunidades</h2><button class="btn" id="btnNovaCom">+ Criar comunidade</button></div>
+    <p class="meta" style="margin-top:-6px">Cada anúncio pode ter a etiqueta de uma comunidade. Escolha uma para ver só os anúncios dela.</p>
     <div class="barra"><input id="buscaCom" placeholder="Buscar comunidade"></div>
     <div id="listaCom">${carregando()}</div>`;
   $('#btnNovaCom').onclick = formNovaComunidade;
   try {
-    const todas = await carregarMinhasComunidades();
+    const todas = await carregarComunidades();
     const desenhar = () => {
       const termo = $('#buscaCom').value.trim().toLowerCase();
       const filtradas = todas.filter(c => !termo || (c.nome + ' ' + (c.descricao || '')).toLowerCase().includes(termo));
-      const minhas = filtradas.filter(c => c.souMembro), outras = filtradas.filter(c => !c.souMembro);
-      $('#listaCom').innerHTML =
-        (minhas.length ? `<h3>Minhas comunidades</h3><div class="com-grade">${minhas.map(cardComunidade).join('')}</div>` : '') +
-        (outras.length ? `<h3>Descobrir</h3><div class="com-grade">${outras.map(cardComunidade).join('')}</div>` : '') +
-        (!filtradas.length ? '<p class="vazio">Nenhuma comunidade encontrada. Que tal criar a primeira?</p>' : '');
-      $('#listaCom').querySelectorAll('[data-ver]').forEach(b => b.onclick = () => {
-        estado.feedComunidade = todas.find(c => String(c.id) === b.dataset.ver); ir('feed');
-      });
-      $('#listaCom').querySelectorAll('[data-entrar]').forEach(b => b.onclick = () => entrarOuSair(b.dataset.entrar, true));
-      $('#listaCom').querySelectorAll('[data-sair]').forEach(b => b.onclick = () => entrarOuSair(b.dataset.sair, false));
+      $('#listaCom').innerHTML = filtradas.length
+        ? `<div class="com-grade">${filtradas.map(cardComunidade).join('')}</div>`
+        : '<p class="vazio">Nenhuma comunidade encontrada. Que tal criar a primeira?</p>';
+      $('#listaCom').querySelectorAll('[data-com]').forEach(el => el.onclick = () => abrirComunidade(todas.find(c => String(c.id) === el.dataset.com)));
     };
     $('#buscaCom').oninput = desenhar;
     desenhar();
   } catch (err) { $('#listaCom').innerHTML = `<p class="vazio erro">${esc(semRecursoNovo(err))}</p>`; }
 }
 function cardComunidade(c) {
-  const criador = c.criador && estado.usuario && c.criador.id === estado.usuario.id;
-  return `<div class="com-card" style="--c:${esc(c.cor || '#2f6bff')}">
+  return `<div class="com-card" data-com="${c.id}" style="--c:${esc(c.cor || '#2f6bff')}">
     <div class="com-banner"><span class="com-icone">${esc(c.icone || '🪐')}</span></div>
     <div class="com-corpo">
       <h3>${esc(c.nome)}</h3>
       <p>${esc(c.descricao || '')}</p>
-      <span class="meta">${c.membros} ${c.membros === 1 ? 'membro' : 'membros'} · ${c.posts} posts</span>
-      <div class="com-acoes">
-        <button class="btn peq" data-ver="${c.id}">Ver feed</button>
-        ${c.souMembro ? (criador ? '<span class="meta" style="align-self:center">Você criou</span>' : `<button class="btn sec peq" data-sair="${c.id}">Sair</button>`) : `<button class="btn azul peq" data-entrar="${c.id}">Entrar</button>`}
-      </div>
+      <div class="com-acoes"><button class="btn peq">Ver anúncios (${c.anuncios})</button></div>
     </div></div>`;
 }
-async function entrarOuSair(id, entrarNela) {
-  try {
-    const c = await chamar(entrarNela ? 'POST' : 'DELETE', '/comunidades/' + id + '/membros');
-    aviso(entrarNela ? 'Você entrou em ' + c.nome : 'Você saiu de ' + c.nome);
-    telaComunidades();
-  } catch (err) { aviso(err.message); }
+function abrirComunidade(c) {
+  if (!c) return;
+  fecharModal();
+  estado.comunidadeAberta = c;
+  ir('comunidades');
+}
+async function telaUmaComunidade(c) {
+  $('#conteudo').innerHTML = `
+    <div class="com-topo" style="--c:${esc(c.cor || '#2f6bff')}">
+      <div class="com-banner"><span class="com-icone">${esc(c.icone || '🪐')}</span></div>
+      <div class="com-corpo">
+        <div class="linha" style="justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div><h2 style="margin:0">${esc(c.nome)}</h2><p class="meta" style="margin:4px 0 0">${esc(c.descricao || '')}</p></div>
+          <div class="linha" style="gap:8px"><button class="btn sec peq" id="voltarComs">← Todas</button><button class="btn peq" id="anunciarAqui">+ Anunciar aqui</button></div>
+        </div>
+      </div>
+    </div>
+    <div id="listaServicos" class="lista">${carregando()}</div>`;
+  $('#voltarComs').onclick = () => { estado.comunidadeAberta = null; telaComunidades(); };
+  $('#anunciarAqui').onclick = () => formPublicar(c.id);
+  carregarServicos();
 }
 const EMOJIS = ['🪐', '💻', '📐', '🎨', '🚀', '☕', '📚', '🧪', '🎮', '⚽', '🎵', '🌱'];
 function formNovaComunidade() {
@@ -986,7 +633,7 @@ function formNovaComunidade() {
   abrirModal(`
     <h2>Nova comunidade</h2>
     <label>Nome</label><input id="cNome" maxlength="60" placeholder="Ex.: Estrutura de Dados 2026">
-    <label>Descrição</label><textarea id="cDesc" maxlength="300" placeholder="Sobre o que é a comunidade?"></textarea>
+    <label>Descrição</label><textarea id="cDesc" maxlength="300" placeholder="Que tipo de anúncio entra aqui?"></textarea>
     <label>Ícone</label><div class="emojis" id="cEmojis">${EMOJIS.map((e, i) => `<button type="button" class="${i === 0 ? 'ativo' : ''}" data-e="${e}">${e}</button>`).join('')}</div>
     <label>Cor</label><input type="color" id="cCor" value="#2f6bff">
     <p class="erro" id="cErro"></p>
@@ -999,8 +646,9 @@ function formNovaComunidade() {
   $('#cCriar').onclick = async () => {
     try {
       const c = await chamar('POST', '/comunidades', { nome: $('#cNome').value.trim(), descricao: $('#cDesc').value.trim() || null, icone, cor: $('#cCor').value });
-      fecharModal(); aviso('Comunidade criada!');
-      estado.feedComunidade = c; ir('feed');
+      estado.comunidades = [];
+      aviso('Comunidade criada!');
+      abrirComunidade(c);
     } catch (err) { $('#cErro').textContent = semRecursoNovo(err); }
   };
 }
@@ -1015,7 +663,7 @@ function telaExplorar() {
         <button data-t="OFERTA" class="o">Ofertas</button>
       </div>
       <input id="busca" placeholder="Buscar por título ou descrição" value="${esc(estado.busca)}">
-      <button class="btn" id="btnPublicar">+ Publicar serviço</button>
+      <button class="btn" id="btnPublicar">+ Publicar anúncio</button>
     </div>
     <div id="listaServicos" class="lista">${carregando()}</div>`;
   const marcar = () => document.querySelectorAll('#abasTipo button').forEach(b => b.classList.toggle('ativo', b.dataset.t === estado.tipo));
@@ -1023,7 +671,7 @@ function telaExplorar() {
   document.querySelectorAll('#abasTipo button').forEach(b => b.onclick = () => { estado.tipo = b.dataset.t; marcar(); carregarServicos(); });
   let espera;
   $('#busca').oninput = (e) => { estado.busca = e.target.value; clearTimeout(espera); espera = setTimeout(carregarServicos, 350); };
-  $('#btnPublicar').onclick = formPublicar;
+  $('#btnPublicar').onclick = () => formPublicar();
   carregarServicos();
 }
 async function carregarServicos() {
@@ -1032,18 +680,27 @@ async function carregarServicos() {
   const q = new URLSearchParams();
   if (estado.tipo) q.set('tipo', estado.tipo);
   if (estado.busca.trim()) q.set('busca', estado.busca.trim());
+  if (estado.tela === 'comunidades' && estado.comunidadeAberta) q.set('comunidadeId', estado.comunidadeAberta.id);
   try {
     const lista = await chamar('GET', '/servicos' + (q.toString() ? '?' + q : ''));
-    if (!lista.length) { alvo.innerHTML = '<p class="vazio">Nenhum serviço encontrado.</p>'; return; }
+    if (!lista.length) { alvo.innerHTML = `<p class="vazio">${estado.tela === 'comunidades' ? 'Ainda não há anúncios nesta comunidade.' : 'Nenhum serviço encontrado.'}</p>`; return; }
     alvo.innerHTML = lista.map(s => `
       <div class="card item ${s.tipo === 'PEDIDO' ? 'pedido' : 'oferta'}" data-id="${s.id}">
-        <span class="selo ${s.tipo}">${s.tipo}</span>
+        <span class="selo ${s.tipo}">${s.tipo}</span>${tagComunidade(s.comunidade)}
         <h3 style="margin-top:8px">${esc(s.titulo)}</h3>
         <p style="margin:0 0 8px">${esc((s.descricao || '').slice(0, 140))}${(s.descricao || '').length > 140 ? '...' : ''}</p>
         <div class="meta">${esc(s.autor.nome)} · ${esc(s.autor.curso || 'UNA')} · <span class="preco">${dinheiro(s.preco)}</span>${s.prazoDias ? ' · ' + s.prazoDias + ' dia(s)' : ''}</div>
       </div>`).join('');
-    alvo.querySelectorAll('.item').forEach(el => el.onclick = () => detalheServico(el.dataset.id));
+    alvo.querySelectorAll('.item').forEach(el => el.onclick = (e) => {
+      const tag = e.target.closest('[data-tag]');
+      if (tag) { e.stopPropagation(); abrirComunidade(lista.find(s => s.comunidade && String(s.comunidade.id) === tag.dataset.tag).comunidade); return; }
+      detalheServico(el.dataset.id);
+    });
   } catch (err) { alvo.innerHTML = falha(err); }
+}
+/** Etiqueta da comunidade no anuncio (clicavel: abre o filtro da comunidade). */
+function tagComunidade(c) {
+  return c ? `<span class="tag-com" data-tag="${c.id}" style="--c:${esc(c.cor || '#2f6bff')}" title="Ver anúncios desta comunidade">${esc(c.icone || '🪐')} ${esc(c.nome)}</span>` : '';
 }
 
 async function detalheServico(id) {
@@ -1053,7 +710,7 @@ async function detalheServico(id) {
     const meu = s.autor.id === estado.usuario.id;
     const papel = s.tipo === 'OFERTA' ? 'contratar este serviço' : 'me oferecer para este pedido';
     abrirModal(`
-      <span class="selo ${s.tipo}">${s.tipo}</span>
+      <span class="selo ${s.tipo}">${s.tipo}</span>${tagComunidade(s.comunidade)}
       <h2 style="margin-top:8px">${esc(s.titulo)}</h2>
       <p>${esc(s.descricao)}</p>
       <p class="meta">Por <b>${esc(s.autor.nome)}</b> (${esc(s.autor.curso || 'UNA')}) · <span class="preco">${dinheiro(s.preco)}</span>${s.prazoDias ? ' · prazo ' + s.prazoDias + ' dia(s)' : ''} · ${esc(s.status)}</p>
@@ -1066,8 +723,9 @@ async function detalheServico(id) {
         <p class="erro" id="erroSol"></p>
         <button class="btn" id="solicitar">Quero ${papel}</button>`}`);
     $('#verPerfil').onclick = () => verPerfilDe(s.autor.id);
+    const tagDetalhe = $('#modalCorpo [data-tag]'); if (tagDetalhe) tagDetalhe.onclick = () => abrirComunidade(s.comunidade);
     if ($('#encerrar')) $('#encerrar').onclick = async () => {
-      try { await chamar('DELETE', '/servicos/' + id); fecharModal(); carregarServicos(); } catch (err) { aviso(err.message); }
+      try { await chamar('DELETE', '/servicos/' + id); fecharModal(); if (estado.tela === 'perfil') telaPerfil(); else carregarServicos(); } catch (err) { aviso(err.message); }
     };
     if ($('#solicitar')) $('#solicitar').onclick = async (e) => {
       e.target.disabled = true; $('#erroSol').textContent = '';
@@ -1079,9 +737,10 @@ async function detalheServico(id) {
   } catch (err) { abrirModal(falha(err)); }
 }
 
-function formPublicar() {
+async function formPublicar(comunidadeId) {
+  if (!estado.comunidades.length) { try { await carregarComunidades(); } catch (e) {} }
   abrirModal(`
-    <h2>Publicar serviço</h2>
+    <h2>Publicar anúncio</h2>
     <form id="formServico">
       <label>Tipo</label>
       <select name="tipo"><option value="OFERTA">OFERTA - eu posso fazer</option><option value="PEDIDO">PEDIDO - eu preciso</option></select>
@@ -1091,6 +750,10 @@ function formPublicar() {
         <div><label>Preço (R$)</label><input name="preco" type="number" min="0" step="0.01" required></div>
         <div><label>Prazo (dias)</label><input name="prazoDias" type="number" min="1" max="365" required></div>
       </div>
+      <label>Comunidade (etiqueta, opcional)</label>
+      <select name="comunidade"><option value="">Sem comunidade</option>
+        ${estado.comunidades.map(c => `<option value="${c.id}" ${c.id === comunidadeId ? 'selected' : ''}>${esc(c.icone || '')} ${esc(c.nome)}</option>`).join('')}</select>
+      <p class="meta" style="margin:6px 0 0">O anúncio aparece na lista geral e também na aba da comunidade.</p>
       <p class="erro" id="erroPub"></p>
       <button class="btn" style="width:100%">Publicar</button>
     </form>`);
@@ -1098,8 +761,9 @@ function formPublicar() {
     e.preventDefault();
     const f = e.target;
     try {
-      await chamar('POST', '/servicos', { tipo: f.tipo.value, titulo: f.titulo.value.trim(), descricao: f.descricao.value.trim(), preco: Number(f.preco.value), prazoDias: Number(f.prazoDias.value) });
-      fecharModal(); carregarServicos();
+      await chamar('POST', '/servicos', { tipo: f.tipo.value, titulo: f.titulo.value.trim(), descricao: f.descricao.value.trim(), preco: Number(f.preco.value), prazoDias: Number(f.prazoDias.value), comunidadeId: f.comunidade.value ? Number(f.comunidade.value) : null });
+      fecharModal(); aviso('Anúncio publicado!');
+      if (estado.tela === 'perfil') telaPerfil(); else carregarServicos();
     } catch (err) { $('#erroPub').textContent = err.message; }
   };
 }
@@ -1277,66 +941,34 @@ function executarAcao(c, acao) {
 function telaPerfil() { $('#conteudo').innerHTML = carregando(); montarPerfil(estado.usuario.id, true); }
 function verPerfilDe(id) { abrirModal(carregando()); montarPerfil(id, false); }
 
-function miniPost(p) {
-  const n = `<span class="n">${ICONE.balao}${compacto(p.comentarios)}</span>`;
-  if (p.tipoMidia === 'TEXTO') return `<div class="mini texto" data-post="${p.id}" style="background:linear-gradient(160deg, ${esc((p.comunidade && p.comunidade.cor) || '#2f6bff')}, #040a24)">${esc((p.legenda || '').slice(0, 90))}${n}</div>`;
-  if (p.tipoMidia === 'IMAGEM') return `<div class="mini" data-post="${p.id}"><img src="${esc(urlMidia(p.midiaUrl))}" alt="" loading="lazy">${n}</div>`;
-  const capa = capaDemo(p.midiaUrl);
-  return `<div class="mini" data-post="${p.id}">${capa ? `<img src="${esc(capa)}" alt="" loading="lazy">` : `<video src="${esc(urlMidia(p.midiaUrl))}#t=0.5" muted preload="metadata"></video>`}${n}</div>`;
-}
-function abrirPostSozinho(post) {
-  abrirModal('<div class="feed feed-unico" id="feedUnico"></div>', 'estreita');
-  montarFeed($('#feedUnico'), [post], false);
-}
-
 async function montarPerfil(id, proprio) {
   try {
-    const [u, av, port, servicos, posts, salvos] = await Promise.all([
+    const [u, av, port, servicos] = await Promise.all([
       chamar('GET', proprio ? '/usuarios/me' : '/usuarios/' + id),
       chamar('GET', '/usuarios/' + id + '/avaliacoes'),
       chamar('GET', '/usuarios/' + id + '/portfolio'),
-      chamar('GET', '/usuarios/' + id + '/servicos'),
-      chamar('GET', '/usuarios/' + id + '/posts').catch(() => []),
-      proprio ? chamar('GET', '/usuarios/me/salvos').catch(() => []) : Promise.resolve([])
+      chamar('GET', '/usuarios/' + id + '/servicos')
     ]);
-    const salvosRecebidos = posts.reduce((s, p) => s + p.salvos, 0);
     const html = `
       <div class="cabeca-perfil">${avatar(u.nome)}<div><h2 style="margin:0">${esc(u.nome)}</h2>
         <p class="meta" style="margin:0">${esc(u.curso || 'UNA')}${u.semestre ? ' · ' + u.semestre + 'º semestre' : ''}${proprio && u.email ? ' · ' + esc(u.email) : ''}</p></div></div>
       ${u.descricao ? `<p>${esc(u.descricao)}</p>` : ''}
       <div class="numeros">
-        <div><b>${posts.length}</b><span>posts</span></div>
-        <div><b>${compacto(salvosRecebidos)}</b><span>vezes salvo</span></div>
+        <div><b>${servicos.filter(s => s.status !== 'ENCERRADO').length}</b><span>anúncios ativos</span></div>
+        <div><b>${port.length}</b><span>no portfólio</span></div>
         <div><b>${av.total ? '★ ' + av.media.toFixed(1) : '-'}</b><span>${av.total} avaliações</span></div>
       </div>
-      ${proprio ? `<div class="linha" style="margin-bottom:14px;flex-wrap:wrap"><button class="btn peq" onclick="formNovoPost()">+ Novo post</button><button class="btn sec peq" onclick="ir('contratacoes')">Minhas contratações</button></div>` : ''}
-      ${proprio ? `<div class="abas" id="abasPerfil" style="display:inline-flex;margin-bottom:12px"><button data-aba="posts" class="ativo">Posts</button><button data-aba="salvos">Salvos (${salvos.length})</button></div>` : '<h3>Posts</h3>'}
-      <div id="gradeArea"></div>
-      <h3 style="margin-top:18px">Serviços publicados</h3>
-      ${servicos.length ? servicos.map(s => `<p style="margin:4px 0"><span class="selo ${s.tipo}">${s.tipo}</span> ${esc(s.titulo)} · ${dinheiro(s.preco)}</p>`).join('') : '<p class="meta">Nenhum.</p>'}
+      ${proprio ? `<div class="linha" style="margin-bottom:14px;flex-wrap:wrap"><button class="btn peq" onclick="formPublicar()">+ Publicar anúncio</button><button class="btn sec peq" onclick="ir('contratacoes')">Minhas contratações</button></div>` : ''}
+      <h3 style="margin-top:6px">Anúncios publicados</h3>
+      ${servicos.length ? servicos.map(s => `<p style="margin:4px 0"><span class="selo ${s.tipo}">${s.tipo}</span>${tagComunidade(s.comunidade)} ${esc(s.titulo)} · ${dinheiro(s.preco)}${s.status === 'ENCERRADO' ? ' · <span class="meta">encerrado</span>' : ''}</p>`).join('') : '<p class="meta">Nenhum.</p>'}
       <h3 style="margin-top:16px">Portfólio</h3>
       ${port.length ? port.map(p => `<div class="card" style="margin-bottom:8px"><b>${esc(p.titulo)}</b><br><span class="meta">${esc(p.descricao || '')}</span></div>`).join('') : '<p class="meta">Ainda vazio. Cada serviço concluído entra aqui automaticamente.</p>'}
       <h3 style="margin-top:16px">Avaliações recebidas</h3>
       ${av.avaliacoes.length ? av.avaliacoes.map(a => `<p style="margin:6px 0">${'★'.repeat(a.nota)}${'☆'.repeat(5 - a.nota)} <b>${esc(a.servicoTitulo)}</b><br><span class="meta">${esc(a.avaliadorNome)}${a.comentario ? ': ' + esc(a.comentario) : ''}</span></p>`).join('') : '<p class="meta">Nenhuma.</p>'}`;
     if (proprio) $('#conteudo').innerHTML = '<div class="card">' + html + '</div>';
     else abrirModal(html);
-    // grade de posts (e aba Salvos no proprio perfil)
-    const desenharGrade = (lista, vazio) => {
-      $('#gradeArea').innerHTML = lista.length ? `<div class="grade-posts" id="gradePosts">${lista.map(miniPost).join('')}</div>` : `<p class="meta">${vazio}</p>`;
-      const grade = $('#gradePosts');
-      if (grade) grade.onclick = (e) => {
-        const m = e.target.closest('[data-post]'); if (!m) return;
-        abrirPostSozinho(lista.find(p => String(p.id) === m.dataset.post));
-      };
-    };
-    desenharGrade(posts, 'Nenhum post ainda.');
-    const abas = $('#abasPerfil');
-    if (abas) abas.onclick = (e) => {
-      const b = e.target.closest('[data-aba]'); if (!b) return;
-      abas.querySelectorAll('button').forEach(x => x.classList.toggle('ativo', x === b));
-      if (b.dataset.aba === 'salvos') desenharGrade(salvos, 'Você ainda não salvou nenhum post. Toque no marcador no feed para salvar.');
-      else desenharGrade(posts, 'Nenhum post ainda.');
-    };
+    const area = proprio ? $('#conteudo') : $('#modalCorpo');
+    area.querySelectorAll('[data-tag]').forEach(el => el.onclick = () => abrirComunidade(servicos.find(s => s.comunidade && String(s.comunidade.id) === el.dataset.tag).comunidade));
   } catch (err) {
     if (proprio) $('#conteudo').innerHTML = falha(err); else abrirModal(falha(err));
   }

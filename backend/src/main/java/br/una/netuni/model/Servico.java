@@ -38,6 +38,11 @@ public class Servico {
     @JoinColumn(name = "aluno_id")
     private Aluno autor;
 
+    /** Etiqueta opcional: liga o anuncio a uma comunidade (RF13). Ele continua na lista geral. */
+    @ManyToOne
+    @JoinColumn(name = "comunidade_id")
+    private Comunidade comunidade;
+
     @Column(name = "data_criacao", nullable = false)
     private LocalDateTime dataCriacao = LocalDateTime.now();
 
@@ -55,6 +60,9 @@ public class Servico {
 
     public BigDecimal getPreco() { return preco; }
     public void setPreco(BigDecimal preco) { this.preco = preco; }
+
+    public Comunidade getComunidade() { return comunidade; }
+    public void setComunidade(Comunidade comunidade) { this.comunidade = comunidade; }
 
     public Integer getPrazoDias() { return prazoDias; }
     public void setPrazoDias(Integer prazoDias) { this.prazoDias = prazoDias; }

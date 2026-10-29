@@ -10,4 +10,7 @@ public interface ServicoRepository extends JpaRepository<Servico, Long> {
     List<Servico> findByStatusOrderByDataCriacaoDesc(StatusServico status);
 
     List<Servico> findByAutorIdOrderByDataCriacaoDesc(Long autorId);
+
+    /** Quantos anuncios abertos tem cada comunidade. */
+    long countByComunidadeIdAndStatus(Long comunidadeId, StatusServico status);
 }

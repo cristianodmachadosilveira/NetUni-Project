@@ -15,7 +15,7 @@ Base: `http://localhost:8080`. Todas as rotas, menos cadastro e login, exigem o 
 | GET | `/usuarios/{id}/avaliacoes` | Avaliações recebidas + média | RF11 |
 | GET | `/usuarios/{id}/portfolio` | Itens do portfólio | RF12 |
 | POST | `/servicos` | Publica pedido ou oferta | RF04 |
-| GET | `/servicos?tipo=OFERTA&busca=calculo` | Busca (filtros opcionais) | RF06 |
+| GET | `/servicos?tipo=OFERTA&busca=calculo&comunidadeId=2` | Busca (filtros opcionais; sem `comunidadeId` é a lista geral) | RF06 / RF13 |
 | GET | `/servicos/{id}` | Detalhes | RF07 |
 | PUT | `/servicos/{id}` | Edita (só o autor) | RF05 |
 | DELETE | `/servicos/{id}` | Encerra (sai da busca) | RF05 |
@@ -29,22 +29,9 @@ Base: `http://localhost:8080`. Todas as rotas, menos cadastro e login, exigem o 
 | POST | `/avaliacoes` | Avalia contratação concluída (nota 1 a 5) | RF11 |
 | POST | `/portfolio` | Adiciona projeto ao portfólio | RF12 |
 | DELETE | `/portfolio/{id}` | Remove item do portfólio | RF12 |
-| GET | `/comunidades` | Lista comunidades (com `souMembro`) | RF13 |
-| POST | `/comunidades` | Cria comunidade (quem cria já entra) | RF13 |
+| GET | `/comunidades` | Lista comunidades (com quantos anúncios abertos cada uma tem) | RF13 |
+| POST | `/comunidades` | Cria comunidade (nome, descrição, ícone, cor) | RF13 |
 | GET | `/comunidades/{id}` | Detalhes da comunidade | RF13 |
-| POST | `/comunidades/{id}/membros` | Entrar na comunidade | RF13 |
-| DELETE | `/comunidades/{id}/membros` | Sair da comunidade (o criador não sai) | RF13 |
-| POST | `/midias` | Upload de foto ou vídeo (multipart, campo `arquivo`, até 30 MB) | RF14 |
-| GET | `/midias/{arquivo}` | Baixa a mídia enviada (público, sem token) | RF14 |
-| POST | `/posts` | Publica post `TEXTO`, `IMAGEM` ou `VIDEO` (só membro posta na comunidade) | RF14 |
-| DELETE | `/posts/{id}` | Apaga post (só o autor) | RF14 |
-| GET | `/feed` | Feed "Para você", ranqueado pelo algoritmo | RF15 |
-| GET | `/feed?comunidadeId=2` | Feed de uma comunidade, do mais novo ao mais antigo | RF15 |
-| POST | `/posts/{id}/salvo` | Salvar / tirar dos salvos (alterna). Não existem curtidas | RF15 |
-| GET | `/usuarios/me/salvos` | Posts que eu salvei (aba Salvos do perfil) | RF15 |
-| GET | `/posts/{id}/comentarios` | Lista comentários | RF15 |
-| POST | `/posts/{id}/comentarios` | Comenta | RF15 |
-| GET | `/usuarios/{id}/posts` | Posts de um aluno (grade do perfil) | RF15 |
 
 ## Estados da contratação
 
@@ -59,15 +46,8 @@ Ao chegar em CONCLUIDA, o serviço entra automaticamente no portfólio do presta
 **Pagamento:** a API só registra `valorNegociado` e `formaPagamento`. Não existe carteira,
 checkout, transferência nem comissão.
 
-## Algoritmo do feed "Para você"
+## Comunidades
 
-Para cada um dos 100 posts mais recentes:
-
-```
-pontos = 1 + salvos x 2 + comentarios x 3 (+ 10 se o post e de uma comunidade minha)
-pontuacao = pontos / (1 + horas desde o post / 12)
-```
-
-Depois ordena da maior para a menor pontuação. Um post com 12 horas vale metade de um igual recém-publicado.
-As mídias ficam na pasta `./data/midias`. No plano gratuito do Render ela é apagada quando o servidor reinicia,
-igual ao banco H2. As mídias de demonstração ficam em `src/main/resources/static/demo` e nunca somem.
+Uma comunidade funciona como etiqueta. No `POST /servicos` (ou `PUT /servicos/{id}`), o campo opcional
+`comunidadeId` liga o anúncio a ela. `GET /servicos?comunidadeId=2` mostra só os anúncios daquela comunidade,
+e `GET /servicos` sem o filtro continua mostrando todos, com ou sem etiqueta.
