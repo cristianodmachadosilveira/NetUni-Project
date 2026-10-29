@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Endereco da API Spring Boot.
-/// Emulador Android: 10.0.2.2 aponta para o computador.
-/// Celular fisico: flutter run --dart-define=API_URL=http://IP_DO_PC:8080
-const String urlApi = String.fromEnvironment('API_URL', defaultValue: 'http://10.0.2.2:8080');
+/// Endereco da API Spring Boot (publicada no Render).
+/// Para usar a API local: flutter run --dart-define=API_URL=http://10.0.2.2:8080
+/// (10.0.2.2 e o computador visto pelo emulador Android; no celular fisico use o IP do PC).
+const String urlApi = String.fromEnvironment('API_URL', defaultValue: 'https://netuni-api.onrender.com');
 
 typedef Json = Map<String, dynamic>;
 

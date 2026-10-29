@@ -41,8 +41,9 @@ flutter run
 na tag `<application ...>`. Para gerar APK de release, adicione também
 `<uses-permission android:name="android.permission.INTERNET"/>` no mesmo arquivo (antes de `<application>`).
 
-O app procura a API em `http://10.0.2.2:8080` (o seu computador visto pelo emulador Android).
-Em um celular físico, use o IP do computador na mesma rede Wi-Fi:
+Por padrão o app usa a API publicada em `https://netuni-api.onrender.com` (no plano gratuito ela
+dorme e a primeira chamada demora ~1 minuto). Para usar a API rodando no seu computador, passe o endereço:
+`http://10.0.2.2:8080` no emulador Android, ou o IP do computador na mesma rede Wi-Fi em um celular físico:
 
 ```bash
 flutter run --dart-define=API_URL=http://192.168.0.10:8080
