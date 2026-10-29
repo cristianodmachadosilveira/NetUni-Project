@@ -10,3 +10,9 @@ services:
     envVars:
       - key: NETUNI_DADOS_DEMONSTRACAO
         value: "true"
+
+  # Versao web (site estatico, gratis). Usa a API acima.
+  - type: web
+    name: netuni-web
+    runtime: static
+    staticPublishPath: ./web
