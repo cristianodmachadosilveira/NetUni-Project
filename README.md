@@ -46,31 +46,12 @@ O app é dividido em 4 telas principais (`Cards`):
 *   **Interface Gráfica:** Java AWT e Swing (`JFrame`, `JPanel`, `CardLayout`, `JLayeredPane`, etc.)
 *   **Padrão de Projeto UI:** Utilização de cores institucionais customizadas (`Color RGB`) e `EmptyBorder` para espaçamentos/margins modernos.
 
----
-
-## ⚙️ Como Executar o Projeto
-
-Como o projeto está contido em um único arquivo de classe (`NetUniApp.java`), a execução é extremamente simples, dispensando o uso de IDEs complexas se não desejar.
+---.
 
 ### Pré-requisitos
 *   [Java Development Kit (JDK)](https://www.oracle.com/java/technologies/downloads/) instalado na máquina.
 
-### Passo a passo via Terminal / CMD
 
-1. Clone o repositório ou baixe o arquivo `NetUniApp.java` em uma pasta.
-2. Abra o terminal e navegue até a pasta onde o arquivo está salvo.
-3. Compile o código executando o comando:
-   ```bash
-   javac NetUniApp.java
-   ```
-4. Execute o aplicativo com o comando:
-   ```bash
-   java NetUniApp
-   ```
-
-> **Nota para usuários de macOS:** O código já contém correções (`setOpaque(true)` e `setBorderPainted(false)`) para garantir que as cores de fundo dos botões do Swing sejam exibidas corretamente no visual padrão do Mac.
-
----
 
 ## 📌 Status do Projeto
 *Protótipo visual (Mockup interativo).* Dados como nomes de usuários, mensagens no chat e itens do feed estão mockados no código para fins de demonstração da jornada do usuário.
