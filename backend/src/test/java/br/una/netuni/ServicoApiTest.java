@@ -58,6 +58,52 @@ class ServicoApiTest extends ApiTesteBase {
     }
 
     @Test
+    void servicoSemModalidadeContinuaComoValor() throws Exception {
+        postar("/servicos", token, "{\"tipo\":\"OFERTA\",\"titulo\":\"Logo\",\"preco\":100,\"prazoDias\":5}")
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.modalidade").value("VALOR"))
+                .andExpect(jsonPath("$.preco").value(100));
+    }
+
+    @Test
+    void servicoValorSemPreco() throws Exception {
+        postar("/servicos", token, "{\"tipo\":\"OFERTA\",\"titulo\":\"Logo\",\"modalidade\":\"VALOR\",\"prazoDias\":5}")
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void servicoACombinarNaoPrecisaDePreco() throws Exception {
+        postar("/servicos", token,
+                "{\"tipo\":\"PEDIDO\",\"titulo\":\"TCC\",\"modalidade\":\"A_COMBINAR\",\"preco\":30,\"prazoDias\":5}")
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.modalidade").value("A_COMBINAR"))
+                .andExpect(jsonPath("$.preco").doesNotExist());   // preco enviado e ignorado
+    }
+
+    @Test
+    void servicoTrocaGuardaOQueAceita() throws Exception {
+        postar("/servicos", token,
+                "{\"tipo\":\"OFERTA\",\"titulo\":\"Aula de violao\",\"modalidade\":\"TROCA\",\"troca\":\"Aula de ingles\",\"prazoDias\":5}")
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.modalidade").value("TROCA"))
+                .andExpect(jsonPath("$.troca").value("Aula de ingles"));
+    }
+
+    @Test
+    void servicoTrocaSemDizerOQueAceita() throws Exception {
+        postar("/servicos", token,
+                "{\"tipo\":\"OFERTA\",\"titulo\":\"Aula de violao\",\"modalidade\":\"TROCA\",\"prazoDias\":5}")
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void servicoComModalidadeInvalida() throws Exception {
+        postar("/servicos", token,
+                "{\"tipo\":\"OFERTA\",\"titulo\":\"Logo\",\"modalidade\":\"FIADO\",\"prazoDias\":5}")
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void buscaFiltraPorTipoETexto() throws Exception {
         criarServico(token, "OFERTA", "Aulas de Calculo");
         criarServico(token, "OFERTA", "Edicao de video");

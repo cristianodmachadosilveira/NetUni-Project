@@ -395,6 +395,12 @@ async function chamar(metodo, caminho, corpo) {
 const $ = (s, r = document) => r.querySelector(s);
 const esc = (t) => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const dinheiro = (v) => v == null ? 'a combinar' : Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+/** Texto do valor do anuncio conforme a forma escolhida no menu (VALOR, A_COMBINAR ou TROCA). Ja vem escapado. */
+function valorAnuncio(s) {
+  if (s.modalidade === 'A_COMBINAR') return '🤝 A combinar';
+  if (s.modalidade === 'TROCA') return '🔄 Troca' + (s.troca ? ': ' + esc(s.troca) : '');
+  return dinheiro(s.preco);
+}
 const dataBR = (d) => d ? new Date(d).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : '';
 const hora = (d) => d ? new Date(d).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
 const NOME_STATUS = { SOLICITADA: 'Solicitada', ACEITA: 'Aceita', EM_ANDAMENTO: 'Em andamento', CONCLUIDA: 'Concluída', CANCELADA: 'Cancelada' };
@@ -689,7 +695,7 @@ async function carregarServicos() {
         <span class="selo ${s.tipo}">${s.tipo}</span>${tagComunidade(s.comunidade)}
         <h3 style="margin-top:8px">${esc(s.titulo)}</h3>
         <p style="margin:0 0 8px">${esc((s.descricao || '').slice(0, 140))}${(s.descricao || '').length > 140 ? '...' : ''}</p>
-        <div class="meta">${esc(s.autor.nome)} · ${esc(s.autor.curso || 'UNA')} · <span class="preco">${dinheiro(s.preco)}</span>${s.prazoDias ? ' · ' + s.prazoDias + ' dia(s)' : ''}</div>
+        <div class="meta">${esc(s.autor.nome)} · ${esc(s.autor.curso || 'UNA')} · <span class="preco">${valorAnuncio(s)}</span>${s.prazoDias ? ' · ' + s.prazoDias + ' dia(s)' : ''}</div>
       </div>`).join('');
     alvo.querySelectorAll('.item').forEach(el => el.onclick = (e) => {
       const tag = e.target.closest('[data-tag]');
@@ -713,7 +719,7 @@ async function detalheServico(id) {
       <span class="selo ${s.tipo}">${s.tipo}</span>${tagComunidade(s.comunidade)}
       <h2 style="margin-top:8px">${esc(s.titulo)}</h2>
       <p>${esc(s.descricao)}</p>
-      <p class="meta">Por <b>${esc(s.autor.nome)}</b> (${esc(s.autor.curso || 'UNA')}) · <span class="preco">${dinheiro(s.preco)}</span>${s.prazoDias ? ' · prazo ' + s.prazoDias + ' dia(s)' : ''} · ${esc(s.status)}</p>
+      <p class="meta">Por <b>${esc(s.autor.nome)}</b> (${esc(s.autor.curso || 'UNA')}) · <span class="preco">${valorAnuncio(s)}</span>${s.prazoDias ? ' · prazo ' + s.prazoDias + ' dia(s)' : ''} · ${esc(s.status)}</p>
       <p class="meta"><button class="link" id="verPerfil">Ver perfil do autor</button></p>
       ${meu ? `<p class="aviso">Este serviço é seu.</p>
                ${s.status !== 'ENCERRADO' ? '<button class="btn perigo" id="encerrar">Encerrar serviço</button>' : ''}` :
@@ -747,9 +753,17 @@ async function formPublicar(comunidadeId) {
       <label>Título</label><input name="titulo" required maxlength="120">
       <label>Descrição</label><textarea name="descricao" required maxlength="2000"></textarea>
       <div class="linha">
-        <div><label>Preço (R$)</label><input name="preco" type="number" min="0" step="0.01" required></div>
+        <div><label>Forma de pagamento</label>
+          <select name="modalidade">
+            <option value="VALOR">R$ - valor definido</option>
+            <option value="A_COMBINAR">A combinar com o anunciante</option>
+            <option value="TROCA">Troca de serviço</option>
+          </select></div>
         <div><label>Prazo (dias)</label><input name="prazoDias" type="number" min="1" max="365" required></div>
       </div>
+      <div id="campoPreco"><label>Preço (R$)</label><input name="preco" type="number" min="0" step="0.01" required></div>
+      <div id="campoTroca" style="display:none"><label>O que você aceita em troca?</label><input name="troca" maxlength="200" placeholder="Ex.: aula de inglês, revisão de texto..."></div>
+      <p class="meta" id="dicaModalidade" style="margin:6px 0 0">Você informa o valor agora (pode ser negociado depois).</p>
       <label>Comunidade (etiqueta, opcional)</label>
       <select name="comunidade"><option value="">Sem comunidade</option>
         ${estado.comunidades.map(c => `<option value="${c.id}" ${c.id === comunidadeId ? 'selected' : ''}>${esc(c.icone || '')} ${esc(c.nome)}</option>`).join('')}</select>
@@ -757,11 +771,27 @@ async function formPublicar(comunidadeId) {
       <p class="erro" id="erroPub"></p>
       <button class="btn" style="width:100%">Publicar</button>
     </form>`);
-  $('#formServico').onsubmit = async (e) => {
+  // Menu "Forma de pagamento": mostra so o campo que faz sentido para a opcao escolhida.
+  const DICAS = {
+    VALOR: 'Você informa o valor agora (pode ser negociado depois).',
+    A_COMBINAR: 'Sem preço no anúncio: o valor é combinado na conversa.',
+    TROCA: 'Sem dinheiro: vocês trocam um serviço por outro.'
+  };
+  const fp = $('#formServico');
+  fp.modalidade.onchange = () => {
+    const m = fp.modalidade.value;
+    $('#campoPreco').style.display = m === 'VALOR' ? '' : 'none';
+    $('#campoTroca').style.display = m === 'TROCA' ? '' : 'none';
+    fp.preco.required = m === 'VALOR';
+    fp.troca.required = m === 'TROCA';
+    $('#dicaModalidade').textContent = DICAS[m];
+  };
+  fp.onsubmit = async (e) => {
     e.preventDefault();
     const f = e.target;
+    const m = f.modalidade.value;
     try {
-      await chamar('POST', '/servicos', { tipo: f.tipo.value, titulo: f.titulo.value.trim(), descricao: f.descricao.value.trim(), preco: Number(f.preco.value), prazoDias: Number(f.prazoDias.value), comunidadeId: f.comunidade.value ? Number(f.comunidade.value) : null });
+      await chamar('POST', '/servicos', { tipo: f.tipo.value, titulo: f.titulo.value.trim(), descricao: f.descricao.value.trim(), modalidade: m, preco: m === 'VALOR' ? Number(f.preco.value) : null, troca: m === 'TROCA' ? f.troca.value.trim() : null, prazoDias: Number(f.prazoDias.value), comunidadeId: f.comunidade.value ? Number(f.comunidade.value) : null });
       fecharModal(); aviso('Anúncio publicado!');
       if (estado.tela === 'perfil') telaPerfil(); else carregarServicos();
     } catch (err) { $('#erroPub').textContent = err.message; }
@@ -960,7 +990,7 @@ async function montarPerfil(id, proprio) {
       </div>
       ${proprio ? `<div class="linha" style="margin-bottom:14px;flex-wrap:wrap"><button class="btn peq" onclick="formPublicar()">+ Publicar anúncio</button><button class="btn sec peq" onclick="ir('contratacoes')">Minhas contratações</button></div>` : ''}
       <h3 style="margin-top:6px">Anúncios publicados</h3>
-      ${servicos.length ? servicos.map(s => `<p style="margin:4px 0"><span class="selo ${s.tipo}">${s.tipo}</span>${tagComunidade(s.comunidade)} ${esc(s.titulo)} · ${dinheiro(s.preco)}${s.status === 'ENCERRADO' ? ' · <span class="meta">encerrado</span>' : ''}</p>`).join('') : '<p class="meta">Nenhum.</p>'}
+      ${servicos.length ? servicos.map(s => `<p style="margin:4px 0"><span class="selo ${s.tipo}">${s.tipo}</span>${tagComunidade(s.comunidade)} ${esc(s.titulo)} · ${valorAnuncio(s)}${s.status === 'ENCERRADO' ? ' · <span class="meta">encerrado</span>' : ''}</p>`).join('') : '<p class="meta">Nenhum.</p>'}
       <h3 style="margin-top:16px">Portfólio</h3>
       ${port.length ? port.map(p => `<div class="card" style="margin-bottom:8px"><b>${esc(p.titulo)}</b><br><span class="meta">${esc(p.descricao || '')}</span></div>`).join('') : '<p class="meta">Ainda vazio. Cada serviço concluído entra aqui automaticamente.</p>'}
       <h3 style="margin-top:16px">Avaliações recebidas</h3>

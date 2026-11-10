@@ -1,5 +1,6 @@
 package br.una.netuni.dto;
 
+import br.una.netuni.model.ModalidadePreco;
 import br.una.netuni.model.TipoServico;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
@@ -22,9 +23,16 @@ public class ServicoRequest {
     @Size(max = 2000, message = "maximo 2000 caracteres")
     public String descricao;
 
-    @NotNull(message = "e obrigatorio")
+    /** VALOR, A_COMBINAR ou TROCA. Se nao vier, vale VALOR. */
+    public ModalidadePreco modalidade;
+
+    /** Obrigatorio so na modalidade VALOR (a regra fica no ServicoService). */
     @PositiveOrZero(message = "nao pode ser negativo")
     public BigDecimal preco;
+
+    /** Obrigatorio so na modalidade TROCA: o que o autor aceita em troca. */
+    @Size(max = 200, message = "maximo 200 caracteres")
+    public String troca;
 
     @NotNull(message = "e obrigatorio")
     @Positive(message = "deve ser maior que zero")

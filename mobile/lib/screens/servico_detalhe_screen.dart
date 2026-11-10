@@ -42,8 +42,10 @@ class _ServicoDetalheScreenState extends State<ServicoDetalheScreen> {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.payments_outlined),
-                title: Text(reais(s['preco'])),
-                subtitle: Text('Prazo: ${s['prazoDias']} dias  •  valor pode ser negociado'),
+                title: Text(valorDoServico(s)),
+                subtitle: Text(s['modalidade'] == 'TROCA'
+                    ? 'Prazo: ${s['prazoDias']} dias  •  troca de servicos, sem dinheiro'
+                    : 'Prazo: ${s['prazoDias']} dias  •  valor pode ser negociado'),
               ),
               ListTile(
                 contentPadding: EdgeInsets.zero,

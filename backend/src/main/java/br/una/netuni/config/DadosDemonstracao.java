@@ -3,6 +3,7 @@ package br.una.netuni.config;
 import br.una.netuni.model.Aluno;
 import br.una.netuni.model.Comunidade;
 import br.una.netuni.model.Habilidade;
+import br.una.netuni.model.ModalidadePreco;
 import br.una.netuni.model.Servico;
 import br.una.netuni.model.TipoServico;
 import br.una.netuni.repository.AlunoRepository;
@@ -62,13 +63,17 @@ public class DadosDemonstracao implements CommandLineRunner {
         criarComunidade("Vida no Campus", "Grupos de estudo, organização e o dia a dia na UNA.", "☕", "#2ee6a0", carla);
 
         criarServico(TipoServico.OFERTA, "Criacao de logo e identidade visual",
-                "Logo + paleta de cores para seu projeto, atletica ou empresa junior.", "150.00", 5, ana, design);
+                "Logo + paleta de cores para seu projeto, atletica ou empresa junior.",
+                ModalidadePreco.VALOR, "150.00", null, 5, ana, design);
         criarServico(TipoServico.OFERTA, "Aulas de reforco em Calculo I",
-                "Aulas online de 1h com lista de exercicios resolvida.", "40.00", 7, bruno, calculo);
+                "Aulas online de 1h com lista de exercicios resolvida.",
+                ModalidadePreco.TROCA, null, "Ajuda com design de slides ou aula de ingles", 7, bruno, calculo);
         criarServico(TipoServico.PEDIDO, "Planilha de controle financeiro",
-                "Preciso de uma planilha simples de entradas e saidas para a republica.", "80.00", 3, carla, empreende);
+                "Preciso de uma planilha simples de entradas e saidas para a republica.",
+                ModalidadePreco.VALOR, "80.00", null, 3, carla, empreende);
         criarServico(TipoServico.PEDIDO, "Formatacao de TCC nas normas ABNT",
-                "Trabalho de 40 paginas, preciso de revisao da formatacao.", "60.00", 4, ana, null);
+                "Trabalho de 40 paginas, preciso de revisao da formatacao.",
+                ModalidadePreco.A_COMBINAR, null, null, 4, ana, null);
     }
 
     private Aluno criarAluno(String nome, String email, String curso, int semestre, String descricao,
@@ -86,13 +91,17 @@ public class DadosDemonstracao implements CommandLineRunner {
         return alunoRepository.save(aluno);
     }
 
-    private void criarServico(TipoServico tipo, String titulo, String descricao, String preco, int prazoDias,
-                              Aluno autor, Comunidade comunidade) {
+    private void criarServico(TipoServico tipo, String titulo, String descricao, ModalidadePreco modalidade,
+                              String preco, String troca, int prazoDias, Aluno autor, Comunidade comunidade) {
         Servico servico = new Servico();
         servico.setTipo(tipo);
         servico.setTitulo(titulo);
         servico.setDescricao(descricao);
-        servico.setPreco(new BigDecimal(preco));
+        servico.setModalidade(modalidade);
+        if (preco != null) {
+            servico.setPreco(new BigDecimal(preco));
+        }
+        servico.setTroca(troca);
         servico.setPrazoDias(prazoDias);
         servico.setAutor(autor);
         servico.setComunidade(comunidade);

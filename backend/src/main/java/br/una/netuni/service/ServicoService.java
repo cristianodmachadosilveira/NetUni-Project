@@ -3,6 +3,7 @@ package br.una.netuni.service;
 import br.una.netuni.dto.ServicoRequest;
 import br.una.netuni.dto.ServicoResponse;
 import br.una.netuni.exception.RegraDeNegocioException;
+import br.una.netuni.model.ModalidadePreco;
 import br.una.netuni.model.Servico;
 import br.una.netuni.model.StatusServico;
 import br.una.netuni.model.TipoServico;
@@ -127,12 +128,42 @@ public class ServicoService {
         return servico.getComunidade() != null && servico.getComunidade().getId().equals(comunidadeId);
     }
 
-    /** Procura o termo no titulo e na descricao, sem diferenciar maiusculas. */
+    /** Procura o termo no titulo, na descricao e no texto da troca, sem diferenciar maiusculas. */
     private boolean contemTermo(Servico servico, String termo) {
         if (servico.getTitulo().toLowerCase().contains(termo)) {
             return true;
         }
-        return servico.getDescricao() != null && servico.getDescricao().toLowerCase().contains(termo);
+        if (servico.getDescricao() != null && servico.getDescricao().toLowerCase().contains(termo)) {
+            return true;
+        }
+        return servico.getTroca() != null && servico.getTroca().toLowerCase().contains(termo);
+    }
+
+    /**
+     * Regra do menu "forma de pagamento":
+     * VALOR exige preco; TROCA exige o texto do que aceita; A_COMBINAR nao exige nada.
+     * O campo que nao faz sentido para a modalidade escolhida e apagado (fica null).
+     */
+    private void preencherPreco(Servico servico, ServicoRequest dados) {
+        ModalidadePreco modalidade = dados.modalidade;
+        if (modalidade == null) {
+            modalidade = ModalidadePreco.VALOR;
+        }
+        servico.setModalidade(modalidade);
+        servico.setPreco(null);
+        servico.setTroca(null);
+
+        if (modalidade == ModalidadePreco.VALOR) {
+            if (dados.preco == null) {
+                throw RegraDeNegocioException.dadosInvalidos("Informe o preco ou escolha 'A combinar' ou 'Troca'");
+            }
+            servico.setPreco(dados.preco);
+        } else if (modalidade == ModalidadePreco.TROCA) {
+            if (dados.troca == null || dados.troca.isBlank()) {
+                throw RegraDeNegocioException.dadosInvalidos("Diga o que voce aceita em troca");
+            }
+            servico.setTroca(dados.troca.trim());
+        }
     }
 
     private void preencher(Servico servico, ServicoRequest dados) {
@@ -143,7 +174,7 @@ public class ServicoService {
         } else {
             servico.setDescricao(dados.descricao.trim());
         }
-        servico.setPreco(dados.preco);
+        preencherPreco(servico, dados);
         servico.setPrazoDias(dados.prazoDias);
         if (dados.comunidadeId == null) {
             servico.setComunidade(null);

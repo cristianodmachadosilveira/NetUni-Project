@@ -22,9 +22,21 @@ public class Servico {
     @Column(length = 2000)
     private String descricao;
 
-    /** Valor sugerido. O valor final e combinado na contratacao e pago FORA do NetUni. */
+    /**
+     * VALOR, A_COMBINAR ou TROCA. A coluna aceita null porque anuncios antigos
+     * nao tinham este campo: nesse caso o getter devolve VALOR.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(length = 12)
+    private ModalidadePreco modalidade = ModalidadePreco.VALOR;
+
+    /** Valor sugerido (so na modalidade VALOR). O valor final e combinado e pago FORA do NetUni. */
     @Column(precision = 10, scale = 2)
     private BigDecimal preco;
+
+    /** So na modalidade TROCA: o que o autor aceita em troca (ex.: "aula de ingles"). */
+    @Column(length = 200)
+    private String troca;
 
     @Column(name = "prazo_dias")
     private Integer prazoDias;
@@ -60,6 +72,17 @@ public class Servico {
 
     public BigDecimal getPreco() { return preco; }
     public void setPreco(BigDecimal preco) { this.preco = preco; }
+
+    public ModalidadePreco getModalidade() {
+        if (modalidade == null) {
+            return ModalidadePreco.VALOR;
+        }
+        return modalidade;
+    }
+    public void setModalidade(ModalidadePreco modalidade) { this.modalidade = modalidade; }
+
+    public String getTroca() { return troca; }
+    public void setTroca(String troca) { this.troca = troca; }
 
     public Comunidade getComunidade() { return comunidade; }
     public void setComunidade(Comunidade comunidade) { this.comunidade = comunidade; }

@@ -18,7 +18,10 @@ class _CriarServicoScreenState extends State<CriarServicoScreen> {
   late String _tipo = (widget.existente?['tipo'] as String?) ?? widget.tipoInicial;
   late final _titulo = TextEditingController(text: widget.existente?['titulo'] as String?);
   late final _descricao = TextEditingController(text: widget.existente?['descricao'] as String?);
+  /// Forma de pagamento escolhida no menu suspenso: VALOR, A_COMBINAR ou TROCA.
+  late String _modalidade = (widget.existente?['modalidade'] as String?) ?? 'VALOR';
   late final _preco = TextEditingController(text: widget.existente?['preco']?.toString() ?? '');
+  late final _troca = TextEditingController(text: widget.existente?['troca'] as String?);
   late final _prazo = TextEditingController(text: widget.existente?['prazoDias']?.toString() ?? '');
   bool _salvando = false;
 
@@ -29,7 +32,10 @@ class _CriarServicoScreenState extends State<CriarServicoScreen> {
       'tipo': _tipo,
       'titulo': _titulo.text.trim(),
       'descricao': _descricao.text.trim(),
-      'preco': double.parse(_preco.text.replaceAll(',', '.')),
+      'modalidade': _modalidade,
+      // So manda o campo que faz sentido para a forma escolhida.
+      'preco': _modalidade == 'VALOR' ? double.parse(_preco.text.replaceAll(',', '.')) : null,
+      'troca': _modalidade == 'TROCA' ? _troca.text.trim() : null,
       'prazoDias': int.parse(_prazo.text),
     };
     try {
@@ -76,17 +82,40 @@ class _CriarServicoScreenState extends State<CriarServicoScreen> {
             const SizedBox(height: 12),
             TextFormField(controller: _descricao, maxLines: 4, decoration: const InputDecoration(labelText: 'Descricao')),
             const SizedBox(height: 12),
-            TextFormField(
-              controller: _preco,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: 'Valor sugerido (R\$)', helperText: 'Pode ser negociado depois'),
-              validator: (v) {
-                final n = double.tryParse((v ?? '').replaceAll(',', '.'));
-                if (n == null) return 'Informe um numero';
-                if (n < 0) return 'Nao pode ser negativo';
-                return null;
-              },
+            // Menu suspenso da forma de pagamento (mesmo estilo de escolher Pedido/Oferta).
+            DropdownButtonFormField<String>(
+              value: _modalidade,
+              decoration: const InputDecoration(labelText: 'Forma de pagamento'),
+              items: [
+                for (final opcao in nomesModalidade.entries)
+                  DropdownMenuItem(value: opcao.key, child: Text(opcao.value)),
+              ],
+              onChanged: (valor) => setState(() => _modalidade = valor!),
             ),
+            const SizedBox(height: 12),
+            if (_modalidade == 'VALOR')
+              TextFormField(
+                controller: _preco,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(labelText: 'Valor sugerido (R\$)', helperText: 'Pode ser negociado depois'),
+                validator: (v) {
+                  final n = double.tryParse((v ?? '').replaceAll(',', '.'));
+                  if (n == null) return 'Informe um numero';
+                  if (n < 0) return 'Nao pode ser negativo';
+                  return null;
+                },
+              ),
+            if (_modalidade == 'A_COMBINAR')
+              const Text('Sem preco no anuncio: o valor e combinado na conversa.',
+                  style: TextStyle(color: Colors.black54)),
+            if (_modalidade == 'TROCA')
+              TextFormField(
+                controller: _troca,
+                maxLength: 200,
+                decoration: const InputDecoration(
+                    labelText: 'O que voce aceita em troca?', helperText: 'Ex.: aula de ingles, revisao de texto'),
+                validator: (v) => (v == null || v.trim().isEmpty) ? 'Diga o que aceita em troca' : null,
+              ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _prazo,

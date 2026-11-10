@@ -20,6 +20,12 @@ Rodar: `cd backend && mvn test`. Os testes sobem a API com banco H2 em memória 
 | Serviço | título vazio | 400 | `servicoComTituloVazio` |
 | Serviço | preço negativo / não numérico | 400 | `servicoComPrecoNegativo`, `servicoComPrecoQueNaoENumero` |
 | Serviço | prazo zero | 400 | `servicoComPrazoZero` |
+| Serviço | sem `modalidade` (anúncio antigo) | 201 VALOR | `servicoSemModalidadeContinuaComoValor` |
+| Serviço | modalidade VALOR sem preço | 400 | `servicoValorSemPreco` |
+| Serviço | A_COMBINAR sem preço | 201, preço null | `servicoACombinarNaoPrecisaDePreco` |
+| Serviço | TROCA com o que aceita | 201 | `servicoTrocaGuardaOQueAceita` |
+| Serviço | TROCA sem dizer o que aceita | 400 | `servicoTrocaSemDizerOQueAceita` |
+| Serviço | modalidade inexistente | 400 | `servicoComModalidadeInvalida` |
 | Serviço | busca por tipo e texto | 1 resultado | `buscaFiltraPorTipoETexto` |
 | Serviço | encerrado sai da busca | lista vazia | `servicoEncerradoSaiDaBusca` |
 | Serviço | outro aluno edita | 403 | `outroAlunoNaoEditaServico` |
