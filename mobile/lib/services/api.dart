@@ -113,6 +113,25 @@ String reais(dynamic valor) {
   return 'R\$ ${numero.toStringAsFixed(2).replaceAll('.', ',')}';
 }
 
+/// Texto do valor de um anuncio conforme a forma de pagamento escolhida no menu.
+/// VALOR -> "R\$ 40,00"  |  A_COMBINAR -> "A combinar"  |  TROCA -> "Troca: aula de ingles"
+String valorDoServico(Json servico) {
+  final modalidade = servico['modalidade'];
+  if (modalidade == 'A_COMBINAR') return 'A combinar';
+  if (modalidade == 'TROCA') {
+    final troca = servico['troca'];
+    return troca == null ? 'Troca' : 'Troca: $troca';
+  }
+  return reais(servico['preco']);
+}
+
+/// Opcoes do menu "Forma de pagamento" (valor enviado para a API -> texto na tela).
+const nomesModalidade = {
+  'VALOR': 'R\$ (valor definido)',
+  'A_COMBINAR': 'A combinar com o anunciante',
+  'TROCA': 'Troca de servico',
+};
+
 const nomesStatus = {
   'SOLICITADA': 'Solicitada',
   'ACEITA': 'Aceita',

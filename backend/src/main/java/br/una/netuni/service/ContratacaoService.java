@@ -11,6 +11,7 @@ import br.una.netuni.exception.RegraDeNegocioException;
 import br.una.netuni.model.Aluno;
 import br.una.netuni.model.Contratacao;
 import br.una.netuni.model.Mensagem;
+import br.una.netuni.model.ModalidadePreco;
 import br.una.netuni.model.Servico;
 import br.una.netuni.model.StatusContratacao;
 import br.una.netuni.model.StatusServico;
@@ -19,6 +20,7 @@ import br.una.netuni.repository.AvaliacaoRepository;
 import br.una.netuni.repository.ContratacaoRepository;
 import br.una.netuni.repository.MensagemRepository;
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -89,7 +91,14 @@ public class ContratacaoService {
             contratacao.setContratante(servico.getAutor());
             contratacao.setPrestador(solicitante);
         }
-        contratacao.setValorNegociado(servico.getPreco());
+        // VALOR: comeca com o preco do anuncio. A_COMBINAR: fica vazio ate negociarem.
+        // TROCA: nao envolve dinheiro, entao ja comeca com R$ 0 e forma "Troca".
+        if (servico.getModalidade() == ModalidadePreco.TROCA) {
+            contratacao.setValorNegociado(BigDecimal.ZERO);
+            contratacao.setFormaPagamento("Troca");
+        } else {
+            contratacao.setValorNegociado(servico.getPreco());
+        }
         contratacao.setObservacoes(dados.observacoes);
         contratacaoRepository.save(contratacao);
 

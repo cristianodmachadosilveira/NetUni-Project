@@ -140,7 +140,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                 contentPadding: EdgeInsets.zero,
                 leading: Icon(Icons.circle, size: 14, color: Cores.doTipo((s as Json)['tipo'] as String)),
                 title: Text(s['titulo'] as String),
-                subtitle: Text('${s['tipo']} • ${s['status']} • ${reais(s['preco'])}'),
+                subtitle: Text('${s['tipo']} • ${s['status']} • ${valorDoServico(s)}'),
                 onTap: () async {
                   await Navigator.push(context,
                       MaterialPageRoute(builder: (_) => ServicoDetalheScreen(id: (s['id'] as num).toInt())));

@@ -51,3 +51,21 @@ checkout, transferência nem comissão.
 Uma comunidade funciona como etiqueta. No `POST /servicos` (ou `PUT /servicos/{id}`), o campo opcional
 `comunidadeId` liga o anúncio a ela. `GET /servicos?comunidadeId=2` mostra só os anúncios daquela comunidade,
 e `GET /servicos` sem o filtro continua mostrando todos, com ou sem etiqueta.
+
+## Forma de pagamento do anúncio
+
+No `POST /servicos` (ou `PUT /servicos/{id}`), o campo `modalidade` vem de um menu suspenso no app/web:
+
+| `modalidade` | Campo obrigatório | Na tela aparece |
+|---|---|---|
+| `VALOR` (padrão se não vier) | `preco` (≥ 0) | `R$ 40,00` |
+| `A_COMBINAR` | nenhum | `A combinar` |
+| `TROCA` | `troca` (o que aceita em troca, até 200 caracteres) | `Troca: aula de inglês` |
+
+O campo que não combina com a modalidade é ignorado e salvo como `null`. Exemplo:
+
+```json
+{ "tipo": "OFERTA", "titulo": "Aula de violão", "modalidade": "TROCA", "troca": "Aula de inglês", "prazoDias": 7 }
+```
+
+Ao solicitar um anúncio de `TROCA`, a contratação já começa com valor `0` e forma de pagamento `Troca`.

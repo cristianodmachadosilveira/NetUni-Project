@@ -1,5 +1,6 @@
 package br.una.netuni.dto;
 
+import br.una.netuni.model.ModalidadePreco;
 import br.una.netuni.model.Servico;
 import br.una.netuni.model.StatusServico;
 import br.una.netuni.model.TipoServico;
@@ -12,7 +13,9 @@ public class ServicoResponse {
     public TipoServico tipo;
     public String titulo;
     public String descricao;
+    public ModalidadePreco modalidade;
     public BigDecimal preco;
+    public String troca;
     public Integer prazoDias;
     public StatusServico status;
     public AlunoResumo autor;
@@ -26,7 +29,9 @@ public class ServicoResponse {
         r.tipo = s.getTipo();
         r.titulo = s.getTitulo();
         r.descricao = s.getDescricao();
+        r.modalidade = s.getModalidade();
         r.preco = s.getPreco();
+        r.troca = s.getTroca();
         r.prazoDias = s.getPrazoDias();
         r.status = s.getStatus();
         r.autor = AlunoResumo.de(s.getAutor());

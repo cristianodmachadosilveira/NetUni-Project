@@ -45,7 +45,7 @@ class _SolicitacaoScreenState extends State<SolicitacaoScreen> {
         body: ListView(padding: const EdgeInsets.all(20), children: [
           Text(s['titulo'] as String, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
-          Text('Com ${(s['autor'] as Json)['nome']}  •  ${reais(s['preco'])}'),
+          Text('Com ${(s['autor'] as Json)['nome']}  •  ${valorDoServico(s)}'),
           const SizedBox(height: 16),
           Text(pedido
               ? 'Voce vai se oferecer para fazer este servico. O autor do pedido precisa aceitar.'

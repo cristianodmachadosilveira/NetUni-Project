@@ -102,7 +102,7 @@ class CardServico extends StatelessWidget {
               Text('${autor['nome']} • ${autor['curso'] ?? 'UNA'}',
                   style: const TextStyle(color: Colors.black54)),
               const SizedBox(height: 8),
-              Text('${reais(servico['preco'])}${prazo != null ? '  •  $prazo dias' : ''}',
+              Text('${valorDoServico(servico)}${prazo != null ? '  •  $prazo dias' : ''}',
                   style: TextStyle(color: Cores.doTipo(servico['tipo'] as String), fontWeight: FontWeight.w600)),
             ]),
           ),
